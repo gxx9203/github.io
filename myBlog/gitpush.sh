@@ -3,6 +3,5 @@
 git add . 
 git commit  -s $1
 
-git push origin  HEAD:refs/heads/ref/head/hexo
+git push origin  HEAD:refs/heads/hexo
 
-echo "Notice: please merger request on github"
