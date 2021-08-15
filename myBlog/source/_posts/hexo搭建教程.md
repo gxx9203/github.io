@@ -11,3 +11,5 @@ tags: hexo搭建教程
 
 按照上述两片文章的操作，可能还是无法更新。如何有多个分支， 需要在 Settings --> Pages --> Source 中进行选择分支，  
 这样在Github Pages 中，能看到有新的更新。 此时在打开链接，就会发生变化
+
+[基于Hexo的matery主题搭建博客并优化](https://blog.csdn.net/jspnetcn/article/details/104111651)
