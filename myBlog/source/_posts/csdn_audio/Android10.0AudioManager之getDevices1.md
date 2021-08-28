@@ -6,6 +6,9 @@ keywords: Android10.0AudioManager之getDevices（一）
 author: 轻量级Lz Csdn认证博客专家 Csdn认证企业博客 码龄9年 暂无认证
 date: 2020-04-07T13:19:00.000Z
 publisher: null
+tags:
+    - CSDN转载
+    - Audio
 stats: paragraph=75 sentences=126, words=1926
 ---
 我们使用AudioManager最多的Api可能就是申请音频焦点和调节声音音量的了，其实随着Android版本的不断迭代，AudioManager的功能也是不断的完善和增加，那么今天我们就来分析一下AudioManager的getDevices

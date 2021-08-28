@@ -6,6 +6,9 @@ keywords: Android10.0audio_policy_configuration.xml解析
 author: 轻量级Lz Csdn认证博客专家 Csdn认证企业博客 码龄9年 暂无认证
 date: 2020-04-09T17:14:00.000Z
 publisher: null
+tags:
+    - CSDN转载
+    - Audio
 stats: paragraph=111 sentences=55, words=896
 ---
 今天我们来分析下AudioPolicyManager的初始化过程，以及它是如何来解析audio_policy_configuration.xml的

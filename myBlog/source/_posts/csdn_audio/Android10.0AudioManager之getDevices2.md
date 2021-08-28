@@ -6,6 +6,9 @@ keywords: Android10.0AudioManager之getDevices（二）
 author: 轻量级Lz Csdn认证博客专家 Csdn认证企业博客 码龄9年 暂无认证
 date: 2020-04-13T17:18:00.000Z
 publisher: null
+tags:
+    - CSDN转载
+    - Audio
 stats: paragraph=27 sentences=64, words=520
 ---
 通过AudioPolicyManager我们拿到了AudioPort和AudioPatch，那么回到AudioManager的updateAudioPortCache的 1.1.3
