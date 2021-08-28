@@ -1,0 +1,341 @@
+---
+link: https://blog.csdn.net/l328873524/article/details/105281484
+title: Android10.0CarAudio分析之Car
+description: 前言不管时代如何，新能源汽车与新兴造车的崛起，带来影响其一就是车载应用的使用的越来越广泛。尤其Android在车载系统中的应用，对于app日渐饱和市场，转行做车载app为何不是一种选择。正文我们也注意到了，Android8.0之后似乎每个版本谷歌对于car相关的功能修改都是很大，说明谷歌也很注重这块，今天我们就来看看Car，为什么先说Car呢，因为好多Api都是通过Car来调用的。先来看C...
+keywords: Android10.0CarAudio分析之Car
+author: 轻量级Lz Csdn认证博客专家 Csdn认证企业博客 码龄9年 暂无认证
+date: 2020-04-03T16:31:00.000Z
+publisher: null
+tags:
+    - CSDN转载
+    - Audio
+stats: paragraph=35 sentences=67, words=924
+---
+不管时代如何，新能源汽车与新兴造车的崛起，带来影响其一就是车载应用的使用的越来越广泛。尤其Android在车载系统中的应用，对于app日渐饱和市场，转行做车载app为何不是一种选择。
+
+我们也注意到了，Android8.0之后似乎每个版本谷歌对于car相关的功能修改都是很大，说明谷歌也很注重这块，今天我们就先来看看Car，为什么先说Car呢，因为好多Api都是通过Car来调用的。
+先来看Car的初始化
+Car的初始化主要是createCar以前还有个connect步骤，目前已经不再需要了，因为connect主要是startCarServer
+
+```java
+    @Deprecated
+    public void connect() throws IllegalStateException {
+        synchronized (this) {
+            if (mConnectionState != STATE_DISCONNECTED) {
+                throw new IllegalStateException("already connected or connecting");
+            }
+            mConnectionState = STATE_CONNECTING;
+            startCarService();
+        }
+    }
+```
+
+我们再看startCarService
+
+```java
+    private void startCarService() {
+        Intent intent = new Intent();
+        intent.setPackage(CAR_SERVICE_PACKAGE);
+        intent.setAction(Car.CAR_SERVICE_INTERFACE_NAME);
+        boolean bound = mContext.bindServiceAsUser(intent, mServiceConnectionListener,
+                Context.BIND_AUTO_CREATE, UserHandle.CURRENT_OR_SELF);
+        if (!bound) {
+            mConnectionRetryCount++;
+            if (mConnectionRetryCount > CAR_SERVICE_BIND_MAX_RETRY) {
+                Log.w(CarLibLog.TAG_CAR, "cannot bind to car service after max retry");
+                mMainThreadEventHandler.post(mConnectionRetryFailedRunnable);
+            } else {
+                mEventHandler.postDelayed(mConnectionRetryRunnable,
+                        CAR_SERVICE_BIND_RETRY_INTERVAL_MS);
+            }
+        } else {
+            mConnectionRetryCount = 0;
+        }
+    }
+```
+
+其实这个在我们之前分析[Android9.0CarAudio分析之一启动过程](https://blog.csdn.net/l328873524/article/details/102964876) 时CarServiceHelperService中已经启动了CarService，那么这里也就不需要在connect了，那么是如何拿到CarService的呢？继续看createCar
+
+```java
+   @Nullable
+    public static Car createCar(Context context) {
+        return createCar(context, (Handler) null);
+    }
+
+    public static Car createCar(Context context, @Nullable Handler handler) {
+        IBinder service = ServiceManager.getService("car_service");
+        if (service == null) {
+            return null;
+        }
+        return new Car(context, ICar.Stub.asInterface(service), handler);
+    }
+```
+
+两种createCar的方式，区别在于是否有handler，就像我们之前分析AudioFocusRequest的时候，handler主要决定回调线程跑在哪里。
+相比之前版本的createCar这里简单了很多，以前还需要传递一个ServiceConnection还要等connect连接上，这里已经不用了，我们发现service也是直接通过ServiceManager.getService("car_service")获取了。（ps以前的api这里就不再多说了）
+我们知道我们可以
+
+```java
+ Car car = Car.createCar(context, handler)
+```
+
+创建一个car的对象，而createCar中真正会new Car
+
+```java
+    public Car(Context context, ICar service, @Nullable Handler handler) {
+        mContext = context;
+        mEventHandler = determineEventHandler(handler);
+        mMainThreadEventHandler = determineMainThreadEventHandler(mEventHandler);
+
+        mService = service;
+        mOwnsService = false;
+        mConnectionState = STATE_CONNECTED;
+        mServiceConnectionListenerClient = null;
+    }
+```
+
+只是一些初始化的赋值，其中determineEventHandler定义了handler的回调线程
+
+```java
+    private static Handler determineEventHandler(@Nullable Handler handler) {
+        if (handler == null) {
+            Looper looper = Looper.getMainLooper();
+            handler = new Handler(looper);
+        }
+        return handler;
+    }
+```
+
+那么，Car可以做什么用呢？我们看看它还有什么方法，
+
+```java
+   public boolean isConnected() {
+        synchronized (this) {
+            return mService != null;
+        }
+    }
+
+    public boolean isConnecting() {
+        synchronized (this) {
+            return mConnectionState == STATE_CONNECTING;
+        }
+    }
+```
+
+一个判断是否已连接，一个判断连接状态。好像很简单，那么接下来就是今天的重点getCarManager
+
+```java
+    public Object
+    (String serviceName) {
+        CarManagerBase manager;
+        ICar service = getICarOrThrow();
+        synchronized (mCarManagerLock) {
+
+            manager = mServiceMap.get(serviceName);
+            if (manager == null) {
+                try {
+
+                    IBinder binder = service.getCarService(serviceName);
+                    if (binder == null) {
+                        Log.w(CarLibLog.TAG_CAR, "getCarManager could not get binder for service:" +
+                                serviceName);
+                        return null;
+                    }
+                    manager = createCarManager(serviceName, binder);
+                    if (manager == null) {
+                        Log.w(CarLibLog.TAG_CAR,
+                                "getCarManager could not create manager for service:" +
+                                        serviceName);
+                        return null;
+                    }
+                    mServiceMap.put(serviceName, manager);
+                } catch (RemoteException e) {
+                    throw e.rethrowFromSystemServer();
+                }
+            }
+        }
+        return manager;
+    }
+
+```
+
+这是我们使用Car的主要作用，就是getCarManager，我们一点一点来分析下，首先
+
+```java
+IBinder binder = service.getCarService(serviceName);
+```
+
+我们可以在CarService的源码里发现这个binder
+
+```java
+    public IBinder onBind(Intent intent) {
+        return mICarImpl;
+    }
+```
+
+知道了其实调用的是mICarImpl的getCarService，而关于mICarImpl的初始化我们可以参照[Android9.0CarAudio分析之一启动过程](https://blog.csdn.net/l328873524/article/details/102964876)
+这里顺便分析下getCarService(serviceName)
+
+```java
+  public IBinder getCarService(String serviceName) {
+        switch (serviceName) {
+            case Car.AUDIO_SERVICE:
+                return mCarAudioService;
+            case Car.APP_FOCUS_SERVICE:
+                return mAppFocusService;
+            case Car.PACKAGE_SERVICE:
+                return mCarPackageManagerService;
+            case Car.DIAGNOSTIC_SERVICE:
+                assertAnyDiagnosticPermission(mContext);
+                return mCarDiagnosticService;
+            case Car.POWER_SERVICE:
+                assertPowerPermission(mContext);
+                return mCarPowerManagementService;
+            case Car.CABIN_SERVICE:
+            case Car.HVAC_SERVICE:
+            case Car.INFO_SERVICE:
+            case Car.PROPERTY_SERVICE:
+            case Car.SENSOR_SERVICE:
+            case Car.VENDOR_EXTENSION_SERVICE:
+                return mCarPropertyService;
+            case Car.CAR_NAVIGATION_SERVICE:
+                assertNavigationManagerPermission(mContext);
+                IInstrumentClusterNavigation navService =
+                        mInstrumentClusterService.getNavigationService();
+                return navService == null ? null : navService.asBinder();
+            case Car.CAR_INSTRUMENT_CLUSTER_SERVICE:
+                assertClusterManagerPermission(mContext);
+                return mInstrumentClusterService.getManagerService();
+            case Car.PROJECTION_SERVICE:
+                return mCarProjectionService;
+            case Car.VMS_SUBSCRIBER_SERVICE:
+                assertVmsSubscriberPermission(mContext);
+                return mVmsSubscriberService;
+            case Car.TEST_SERVICE: {
+                assertPermission(mContext, Car.PERMISSION_CAR_TEST_SERVICE);
+                synchronized (this) {
+                    if (mCarTestService == null) {
+                        mCarTestService = new CarTestService(mContext, this);
+                    }
+                    return mCarTestService;
+                }
+            }
+            case Car.BLUETOOTH_SERVICE:
+                return mCarBluetoothService;
+            case Car.STORAGE_MONITORING_SERVICE:
+                assertPermission(mContext, Car.PERMISSION_STORAGE_MONITORING);
+                return mCarStorageMonitoringService;
+            case Car.CAR_DRIVING_STATE_SERVICE:
+                assertDrivingStatePermission(mContext);
+                return mCarDrivingStateService;
+            case Car.CAR_UX_RESTRICTION_SERVICE:
+                return mCarUXRestrictionsService;
+            case Car.CAR_CONFIGURATION_SERVICE:
+                return mCarConfigurationService;
+            case Car.CAR_TRUST_AGENT_ENROLLMENT_SERVICE:
+                assertTrustAgentEnrollmentPermission(mContext);
+                return mCarTrustedDeviceService.getCarTrustAgentEnrollmentService();
+            case Car.CAR_MEDIA_SERVICE:
+                return mCarMediaService;
+            case Car.CAR_BUGREPORT_SERVICE:
+                return mCarBugreportManagerService;
+            default:
+                Log.w(CarLog.TAG_SERVICE, "getCarService for unknown service:" + serviceName);
+                return null;
+        }
+    }
+```
+
+所有与Car相关的service基本都在这了，我们之前也只是分析了CarAudioService的启动过程，如果可以希望抽时间我们全都分析一下。
+我们通过serviceName拿到了对应service，那么继续看如何拿到的manager
+
+```java
+  private CarManagerBase createCarManager(String serviceName, IBinder binder) {
+        CarManagerBase manager = null;
+        switch (serviceName) {
+            case AUDIO_SERVICE:
+                manager = new CarAudioManager(binder, mContext, mEventHandler);
+                break;
+            case SENSOR_SERVICE:
+                manager = new CarSensorManager(binder, mContext, mEventHandler);
+                break;
+            case INFO_SERVICE:
+                manager = new CarInfoManager(binder);
+                break;
+            case APP_FOCUS_SERVICE:
+                manager = new CarAppFocusManager(binder, mEventHandler);
+                break;
+            case PACKAGE_SERVICE:
+                manager = new CarPackageManager(binder, mContext);
+                break;
+            case CAR_NAVIGATION_SERVICE:
+                manager = new CarNavigationStatusManager(binder);
+                break;
+            case CABIN_SERVICE:
+                manager = new CarCabinManager(binder, mContext, mEventHandler);
+                break;
+            case DIAGNOSTIC_SERVICE:
+                manager = new CarDiagnosticManager(binder, mContext, mEventHandler);
+                break;
+            case HVAC_SERVICE:
+                manager = new CarHvacManager(binder, mContext, mEventHandler);
+                break;
+            case POWER_SERVICE:
+                manager = new CarPowerManager(binder, mContext, mEventHandler);
+                break;
+            case PROJECTION_SERVICE:
+                manager = new CarProjectionManager(binder, mEventHandler);
+                break;
+            case PROPERTY_SERVICE:
+                manager = new CarPropertyManager(ICarProperty.Stub.asInterface(binder),
+                    mEventHandler);
+                break;
+            case VENDOR_EXTENSION_SERVICE:
+                manager = new CarVendorExtensionManager(binder, mEventHandler);
+                break;
+            case CAR_INSTRUMENT_CLUSTER_SERVICE:
+                manager = new CarInstrumentClusterManager(binder, mEventHandler);
+                break;
+            case TEST_SERVICE:
+
+                manager = new CarTestManagerBinderWrapper(binder);
+                break;
+            case VMS_SUBSCRIBER_SERVICE:
+                manager = new VmsSubscriberManager(binder);
+                break;
+            case BLUETOOTH_SERVICE:
+                manager = new CarBluetoothManager(binder, mContext);
+                break;
+            case STORAGE_MONITORING_SERVICE:
+                manager = new CarStorageMonitoringManager(binder, mEventHandler);
+                break;
+            case CAR_DRIVING_STATE_SERVICE:
+                manager = new CarDrivingStateManager(binder, mContext, mEventHandler);
+                break;
+            case CAR_UX_RESTRICTION_SERVICE:
+                manager = new CarUxRestrictionsManager(binder, mContext, mEventHandler);
+                break;
+            case CAR_CONFIGURATION_SERVICE:
+                manager = new CarConfigurationManager(binder);
+                break;
+            case CAR_TRUST_AGENT_ENROLLMENT_SERVICE:
+                manager = new CarTrustAgentEnrollmentManager(binder, mContext, mEventHandler);
+                break;
+            case CAR_MEDIA_SERVICE:
+                manager = new CarMediaManager(binder);
+                break;
+            case CAR_BUGREPORT_SERVICE:
+                manager = new CarBugreportManager(binder, mContext);
+                break;
+            default:
+                break;
+        }
+        return manager;
+    }
+
+```
+
+so easy，就是根据serviceName创建不同的manager。
+
+我们通过createCar创建Car对象，Car对象在创建的时候通过aidl的方式与CarService通信，其中CarService中又会拉起很多与Car相关的service，每个service都会有一个对应的manager（当然这些service与manager也是通过aidl通信的）。
+总结下来就是通过Car的getCarManager最终调用到指定的manger来实现调用其对应api的。那么有人会问，为什么要通过Car来作为入口呢？而不是我想调用那个servier就直接new哪个对应的manager呢？（谷歌爸爸的用意，自己猜吧~）

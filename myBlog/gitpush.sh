@@ -1,7 +1,7 @@
 #!/bin/bash
 
 git add . 
-git commit  -m $1
+git commit  -m  'update'
 
 git push origin  HEAD:refs/heads/hexo
 

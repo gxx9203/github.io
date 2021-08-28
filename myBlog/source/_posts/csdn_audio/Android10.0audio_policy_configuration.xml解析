@@ -1,0 +1,598 @@
+---
+link: https://blog.csdn.net/l328873524/article/details/105374196
+title: Android10.0audio_policy_configuration.xml解析
+description: 前言今天我们来分析下AudioPolicyManager的初始化过程，以及它是如何来解析audio_policy_configuration.xml的正文先来看看AudioPolicyManager的初始化过程吧，说到AudioPolicyManager那么就得先说AudioPolicyService。我们知道开机上电后会先执行init rc，audioserver就是通过init rc启...
+keywords: Android10.0audio_policy_configuration.xml解析
+author: 轻量级Lz Csdn认证博客专家 Csdn认证企业博客 码龄9年 暂无认证
+date: 2020-04-09T17:14:00.000Z
+publisher: null
+stats: paragraph=111 sentences=55, words=896
+---
+今天我们来分析下AudioPolicyManager的初始化过程，以及它是如何来解析audio_policy_configuration.xml的
+
+先来看看AudioPolicyManager的初始化过程吧，说到AudioPolicyManager那么就得先说AudioPolicyService。
+我们知道开机上电后会先执行init rc，audioserver就是通过init rc启动起来的，在audioserver的man函数中我摘录了几行代码
+
+AudioPolicyService应运而生，故事就从这里开始吧，话说 AudioPolicyService::instantiate()，由于我binder学的不是很好，这里就简单说下因为AudioPolicyService :public BinderService。而BinderService的instantiate如下
+
+```cpp
+static void instantiate() { publish(); }
+```
+
+```cpp
+    static status_t publish(bool allowIsolated = false,
+                            int dumpFlags = IServiceManager::DUMP_FLAG_PRIORITY_DEFAULT) {
+        sp<IServiceManager> sm(defaultServiceManager());
+        return sm->addService(String16(SERVICE::getServiceName()), new SERVICE(), allowIsolated,
+                              dumpFlags);
+    }
+```
+
+明白了instantiate的过程，其实就是向serviceManager中注册服务。我们继续看
+
+```cpp
+void AudioPolicyService::onFirstRef()
+{
+    {
+        Mutex::Autolock _l(mLock);
+
+        mAudioCommandThread = new AudioCommandThread(String8("ApmAudio"), this);
+
+        mOutputCommandThread = new AudioCommandThread(String8("ApmOutput"), this);
+
+        mAudioPolicyClient = new AudioPolicyClient(this);
+        mAudioPolicyManager = createAudioPolicyManager(mAudioPolicyClient);
+    }
+
+    sp<AudioPolicyEffects>audioPolicyEffects = new AudioPolicyEffects();
+    {
+        Mutex::Autolock _l(mLock);
+        mAudioPolicyEffects = audioPolicyEffects;
+    }
+
+    mUidPolicy = new UidPolicy(this);
+    mUidPolicy->registerSelf();
+
+    mSensorPrivacyPolicy = new SensorPrivacyPolicy(this);
+    mSensorPrivacyPolicy->registerSelf();
+}
+```
+
+找到createAudioPolicyManager，来初始化主角 AudioPolicyManager
+
+```cpp
+extern "C" AudioPolicyInterface* createAudioPolicyManager(
+        AudioPolicyClientInterface *clientInterface)
+{
+    return new AudioPolicyManager(clientInterface);
+}
+```
+
+而AudioPolicyManager一般分为默认的和厂商定制的，厂商定制的一般放在hal下，但今天我们分析的default的位于frameworks/av/services/audiopolicy/managerdefault/AudioPolicyManager.cpp路径下。继续看看AudioPolicyManager的初始化
+
+```cpp
+AudioPolicyManager::AudioPolicyManager(AudioPolicyClientInterface *clientInterface)
+        : AudioPolicyManager(clientInterface, false )
+{
+
+    loadConfig();
+
+    initialize();
+}
+```
+
+其中又加载了这个
+
+```cpp
+AudioPolicyManager::AudioPolicyManager(AudioPolicyClientInterface *clientInterface,
+                                       bool )
+    :
+    mUidCached(AID_AUDIOSERVER),
+    mpClientInterface(clientInterface),
+    mLimitRingtoneVolume(false), mLastVoiceVolume(-1.0f),
+    mA2dpSuspended(false),
+    mConfig(mHwModulesAll, mAvailableOutputDevices, mAvailableInputDevices, mDefaultOutputDevice),
+    mAudioPortGeneration(1),
+    mBeaconMuteRefCount(0),
+    mBeaconPlayingRefCount(0),
+    mBeaconMuted(false),
+    mTtsOutputAvailable(false),
+    mMasterMono(false),
+    mMusicEffectOutput(AUDIO_IO_HANDLE_NONE)
+{
+}
+```
+
+先分析 loadConfig()
+
+```cpp
+void AudioPolicyManager::loadConfig() {
+
+    if (deserializeAudioPolicyXmlConfig(getConfig()) != NO_ERROR) {
+        ALOGE("could not load audio policy configuration file, setting defaults");
+
+        getConfig().setDefault();
+    }
+}
+```
+
+这里的getConfig就是定义的AudioPolicyConfig
+
+```cpp
+ AudioPolicyConfig mConfig
+```
+
+继续分析deserializeAudioPolicyXmlConfig
+
+```cpp
+static status_t deserializeAudioPolicyXmlConfig(AudioPolicyConfig &config) {
+    char audioPolicyXmlConfigFile[AUDIO_POLICY_XML_CONFIG_FILE_PATH_MAX_LENGTH];
+    std::vector<const char*> fileNames;
+    status_t ret;
+
+    if (property_get_bool("ro.bluetooth.a2dp_offload.supported", false)) {
+        if (property_get_bool("persist.bluetooth.bluetooth_audio_hal.disabled", false) &&
+            property_get_bool("persist.bluetooth.a2dp_offload.disabled", false)) {
+
+            fileNames.push_back(AUDIO_POLICY_BLUETOOTH_LEGACY_HAL_XML_CONFIG_FILE_NAME);
+        } else if (property_get_bool("persist.bluetooth.a2dp_offload.disabled", false)) {
+
+            fileNames.push_back(AUDIO_POLICY_A2DP_OFFLOAD_DISABLED_XML_CONFIG_FILE_NAME);
+        }
+    } else if (property_get_bool("persist.bluetooth.bluetooth_audio_hal.disabled", false)) {
+        fileNames.push_back(AUDIO_POLICY_BLUETOOTH_LEGACY_HAL_XML_CONFIG_FILE_NAME);
+    }
+    fileNames.push_back(AUDIO_POLICY_XML_CONFIG_FILE_NAME);
+
+    for (const char* fileName : fileNames) {
+        for (int i = 0; i < kConfigLocationListSize; i++) {
+            snprintf(audioPolicyXmlConfigFile, sizeof(audioPolicyXmlConfigFile),
+                     "%s/%s", kConfigLocationList[i], fileName);
+
+            ret = deserializeAudioPolicyFile(audioPolicyXmlConfigFile, &config);
+            if (ret == NO_ERROR) {
+
+                config.setSource(audioPolicyXmlConfigFile);
+                return ret;
+            }
+        }
+    }
+    return ret;
+}
+```
+
+这里把要解析的xml文件名放到了vector中，最终通过遍历逐一解析，关于A2DP相关的prop的默认都是false，这里就暂不说了，这里说下 fileNames.push_back(AUDIO_POLICY_XML_CONFIG_FILE_NAME)（android7.0之后就使用了这个xml）
+
+```cpp
+#define AUDIO_POLICY_XML_CONFIG_FILE_NAME "audio_policy_configuration.xml"
+```
+
+然后抛砖引玉的就到了今天的最终主角，deserializeAudioPolicyFile位置：frameworks/av/services/audiopolicy/common/managerdefinitions/src/Serializer.cpp
+
+```cpp
+status_t deserializeAudioPolicyFile(const char *fileName, AudioPolicyConfig *config)
+{
+    PolicySerializer serializer;
+    return serializer.deserialize(fileName, config);
+}
+
+}
+```
+
+这是一个解析的模板类，xml解析我们就不说了，主要说下赋值过程。先看下xml
+，一般厂商也会定制这个xml到指定目录，但这里就分析frameworks/av/services/audiopolicy/config/audio_policy_configuration.xml
+
+```cpp
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- Copyright (C) 2019 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+
+     See the License for the specific language governing permissions and
+     limitations under the License.
+
+-->
+
+<audioPolicyConfiguration version="1.0" xmlns:xi="http://www.w3.org/2001/XInclude">
+    <!-- version section contains a "version" tag in the form "major.minor" e.g version="1.0" -->
+
+    <!-- Global configuration Decalaration -->
+    <globalConfiguration speaker_drc_enabled="true"/>
+
+    <!-- Modules section:
+        There is one section per audio HW module present on the platform.
+
+        Each module section will contains two mandatory tags for audio HAL "halVersion" and "name".
+
+        The module names are the same as in current .conf file:
+                "primary", "A2DP", "remote_submix", "USB"
+        Each module will contain the following sections:
+        "devicePorts": a list of device descriptors for all input and output devices accessible via this
+        module.
+
+        This contains both permanently attached devices and removable devices.
+
+        "mixPorts": listing all output and input streams exposed by the audio HAL
+        "routes": list of possible connections between input and output devices or between stream and
+        devices.
+
+            "route": is defined by an attribute:
+                -"type": <mux|mix> means all sources are mutual exclusive (mux) or can be mixed (mix)
+                -"sink": the sink involved in this route
+                -"sources": all the sources than can be connected to the sink via vis route
+        "attachedDevices": permanently attached devices.
+
+        The attachedDevices section is a list of devices names. The names correspond to device names
+        defined in <devicePorts> section.
+
+        "defaultOutputDevice": device to be used by default when no policy rule applies
+    -->
+    <modules>
+        <!-- Primary Audio HAL -->
+        <module name="primary" halVersion="3.0">
+            <attachedDevices>
+                <item>Speaker</item>
+                <item>Built-In Mic</item>
+                <item>Built-In Back Mic</item>
+            </attachedDevices>
+            <defaultOutputDevice>Speaker</defaultOutputDevice>
+            <mixPorts>
+                <mixPort name="primary output" role="source" flags="AUDIO_OUTPUT_FLAG_PRIMARY">
+                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                             samplingRates="48000" channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
+                </mixPort>
+                <mixPort name="deep_buffer" role="source"
+                        flags="AUDIO_OUTPUT_FLAG_DEEP_BUFFER">
+                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                             samplingRates="48000" channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
+                </mixPort>
+                <mixPort name="compressed_offload" role="source"
+                         flags="AUDIO_OUTPUT_FLAG_DIRECT|AUDIO_OUTPUT_FLAG_COMPRESS_OFFLOAD|AUDIO_OUTPUT_FLAG_NON_BLOCKING">
+                    <profile name="" format="AUDIO_FORMAT_MP3"
+                             samplingRates="8000,11025,12000,16000,22050,24000,32000,44100,48000"
+                             channelMasks="AUDIO_CHANNEL_OUT_STEREO,AUDIO_CHANNEL_OUT_MONO"/>
+                    <profile name="" format="AUDIO_FORMAT_AAC"
+                             samplingRates="8000,11025,12000,16000,22050,24000,32000,44100,48000"
+                             channelMasks="AUDIO_CHANNEL_OUT_STEREO,AUDIO_CHANNEL_OUT_MONO"/>
+                    <profile name="" format="AUDIO_FORMAT_AAC_LC"
+                             samplingRates="8000,11025,12000,16000,22050,24000,32000,44100,48000"
+                             channelMasks="AUDIO_CHANNEL_OUT_STEREO,AUDIO_CHANNEL_OUT_MONO"/>
+                </mixPort>
+                <mixPort name="voice_tx" role="source">
+                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                             samplingRates="8000,16000" channelMasks="AUDIO_CHANNEL_OUT_MONO"/>
+                </mixPort>
+                <mixPort name="primary input" role="sink">
+                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                             samplingRates="8000,11025,12000,16000,22050,24000,32000,44100,48000"
+                             channelMasks="AUDIO_CHANNEL_IN_MONO,AUDIO_CHANNEL_IN_STEREO,AUDIO_CHANNEL_IN_FRONT_BACK"/>
+                </mixPort>
+                <mixPort name="voice_rx" role="sink">
+                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                             samplingRates="8000,16000" channelMasks="AUDIO_CHANNEL_IN_MONO"/>
+                </mixPort>
+            </mixPorts>
+            <devicePorts>
+                <!-- Output devices declaration, i.e. Sink DEVICE PORT -->
+                <devicePort tagName="Earpiece" type="AUDIO_DEVICE_OUT_EARPIECE" role="sink">
+                   <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                            samplingRates="48000" channelMasks="AUDIO_CHANNEL_IN_MONO"/>
+                </devicePort>
+                <devicePort tagName="Speaker" role="sink" type="AUDIO_DEVICE_OUT_SPEAKER" address="">
+                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                             samplingRates="48000" channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
+                    <gains>
+                        <gain name="gain_1" mode="AUDIO_GAIN_MODE_JOINT"
+                              minValueMB="-8400"
+                              maxValueMB="4000"
+                              defaultValueMB="0"
+                              stepValueMB="100"/>
+                    </gains>
+                </devicePort>
+                <devicePort tagName="Wired Headset" type="AUDIO_DEVICE_OUT_WIRED_HEADSET" role="sink">
+                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                             samplingRates="48000" channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
+                </devicePort>
+                <devicePort tagName="Wired Headphones" type="AUDIO_DEVICE_OUT_WIRED_HEADPHONE" role="sink">
+                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                             samplingRates="48000" channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
+                </devicePort>
+                <devicePort tagName="BT SCO" type="AUDIO_DEVICE_OUT_BLUETOOTH_SCO" role="sink">
+                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                             samplingRates="8000,16000" channelMasks="AUDIO_CHANNEL_OUT_MONO"/>
+                </devicePort>
+                <devicePort tagName="BT SCO Headset" type="AUDIO_DEVICE_OUT_BLUETOOTH_SCO_HEADSET" role="sink">
+                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                             samplingRates="8000,16000" channelMasks="AUDIO_CHANNEL_OUT_MONO"/>
+                </devicePort>
+                <devicePort tagName="BT SCO Car Kit" type="AUDIO_DEVICE_OUT_BLUETOOTH_SCO_CARKIT" role="sink">
+                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                             samplingRates="8000,16000" channelMasks="AUDIO_CHANNEL_OUT_MONO"/>
+                </devicePort>
+                <devicePort tagName="Telephony Tx" type="AUDIO_DEVICE_OUT_TELEPHONY_TX" role="sink">
+                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                             samplingRates="8000,16000" channelMasks="AUDIO_CHANNEL_OUT_MONO"/>
+                </devicePort>
+
+                <devicePort tagName="Built-In Mic" type="AUDIO_DEVICE_IN_BUILTIN_MIC" role="source">
+                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                             samplingRates="8000,11025,12000,16000,22050,24000,32000,44100,48000"
+                             channelMasks="AUDIO_CHANNEL_IN_MONO,AUDIO_CHANNEL_IN_STEREO,AUDIO_CHANNEL_IN_FRONT_BACK"/>
+                </devicePort>
+                <devicePort tagName="Built-In Back Mic" type="AUDIO_DEVICE_IN_BACK_MIC" role="source">
+                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                             samplingRates="8000,11025,12000,16000,22050,24000,32000,44100,48000"
+                             channelMasks="AUDIO_CHANNEL_IN_MONO,AUDIO_CHANNEL_IN_STEREO,AUDIO_CHANNEL_IN_FRONT_BACK"/>
+                </devicePort>
+                <devicePort tagName="Wired Headset Mic" type="AUDIO_DEVICE_IN_WIRED_HEADSET" role="source">
+                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                             samplingRates="8000,11025,12000,16000,22050,24000,32000,44100,48000"
+                             channelMasks="AUDIO_CHANNEL_IN_MONO,AUDIO_CHANNEL_IN_STEREO,AUDIO_CHANNEL_IN_FRONT_BACK"/>
+                </devicePort>
+                <devicePort tagName="BT SCO Headset Mic" type="AUDIO_DEVICE_IN_BLUETOOTH_SCO_HEADSET" role="source">
+                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                             samplingRates="8000,16000" channelMasks="AUDIO_CHANNEL_IN_MONO"/>
+                </devicePort>
+                <devicePort tagName="Telephony Rx" type="AUDIO_DEVICE_IN_TELEPHONY_RX" role="source">
+                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
+                             samplingRates="8000,16000" channelMasks="AUDIO_CHANNEL_IN_MONO"/>
+                </devicePort>
+            </devicePorts>
+            <!-- route declaration, i.e. list all available sources for a given sink -->
+            <routes>
+                <route type="mix" sink="Earpiece"
+                       sources="primary output,deep_buffer,BT SCO Headset Mic"/>
+                <route type="mix" sink="Speaker"
+                       sources="primary output,deep_buffer,compressed_offload,BT SCO Headset Mic,Telephony Rx"/>
+                <route type="mix" sink="Wired Headset"
+                       sources="primary output,deep_buffer,compressed_offload,BT SCO Headset Mic,Telephony Rx"/>
+                <route type="mix" sink="Wired Headphones"
+                       sources="primary output,deep_buffer,compressed_offload,BT SCO Headset Mic,Telephony Rx"/>
+                <route type="mix" sink="primary input"
+                       sources="Built-In Mic,Built-In Back Mic,Wired Headset Mic,BT SCO Headset Mic"/>
+                <route type="mix" sink="Telephony Tx"
+                       sources="Built-In Mic,Built-In Back Mic,Wired Headset Mic,BT SCO Headset Mic, voice_tx"/>
+                <route type="mix" sink="voice_rx"
+                       sources="Telephony Rx"/>
+            </routes>
+
+        </module>
+
+        <!-- A2dp Input Audio HAL -->
+        <xi:include href="a2dp_in_audio_policy_configuration.xml"/>
+
+        <!-- Usb Audio HAL -->
+        <xi:include href="usb_audio_policy_configuration.xml"/>
+
+        <!-- Remote Submix Audio HAL -->
+        <xi:include href="r_submix_audio_policy_configuration.xml"/>
+
+        <!-- Bluetooth Audio HAL -->
+        <xi:include href="bluetooth_audio_policy_configuration.xml"/>
+
+        <!-- MSD Audio HAL (optional) -->
+        <xi:include href="msd_audio_policy_configuration.xml"/>
+
+    </modules>
+    <!-- End of Modules section -->
+
+    <!-- Volume section:
+        IMPORTANT NOTE: Volume tables have been moved to engine configuration.
+
+                        Keep it here for legacy.
+
+                        Engine will fallback on these files if none are provided by engine.
+
+     -->
+
+    <xi:include href="audio_policy_volumes.xml"/>
+    <xi:include href="default_volume_tables.xml"/>
+
+    <!-- End of Volume section -->
+
+    <!-- Surround Sound configuration -->
+
+    <xi:include href="surround_sound_configuration_5_0.xml"/>
+
+    <!-- End of Surround Sound configuration -->
+
+</audioPolicyConfiguration>
+
+```
+
+我们来看看如何把xml里这些标签解析出来初始化的。也就是initialize()，代码太长我们还是一点一点分析吧
+
+```cpp
+    audio_policy::EngineInstance *engineInstance = audio_policy::EngineInstance::getInstance();
+    if (!engineInstance) {
+        ALOGE("%s:  Could not get an instance of policy engine", __FUNCTION__);
+        return NO_INIT;
+    }
+
+    mEngine = engineInstance->queryInterface<AudioPolicyManagerInterface>();
+    if (mEngine == NULL) {
+        ALOGE("%s: Failed to get Policy Engine Interface", __FUNCTION__);
+        return NO_INIT;
+    }
+    mEngine->setObserver(this);
+    status_t status = mEngine->initCheck();
+    if (status != NO_ERROR) {
+        LOG_FATAL("Policy engine not initialized(err=%d)", status);
+        return status;
+    }
+```
+
+这块代码主要初始化Engine ，Engine 主要做strategy用的，后面再细说。
+
+```cpp
+    for (const auto& hwModule : mHwModulesAll) {
+        hwModule->setHandle(mpClientInterface->loadHwModule(hwModule->getName()));
+        if (hwModule->getHandle() == AUDIO_MODULE_HANDLE_NONE) {
+            ALOGW("could not open HW module %s", hwModule->getName());
+            continue;
+        }
+        mHwModules.push_back(hwModule);
+
+```
+
+一个很长的for循环，我们从头开始梳理，首先涉及了mHwModulesAl
+
+## **mHwModulesAll**
+
+类型：HwModuleCollection: public Vector
+
+还记得通过AudioPolicyManager的初始化时mConfig(mHwModulesAll, mAvailableOutputDevices, mAvailableInputDevices, mDefaultOutputDevice)，mHwModulesAll，其实它对应的就是 < module name="primary" halVersion="3.0">包括那几个include的集合，仅参照本文是 primary 、a2dp、usb、r_submix、bluetooth和msd。
+
+那么我们回到initialize()中继续往下看，又有一个mHwModules
+
+## **mHwModules**
+
+类型：HwModuleCollection: public Vector
+
+```cpp
+        for (const auto& outProfile : hwModule->getOutputProfiles()) {
+
+            if (!outProfile->canOpenNewIo()) {
+                ALOGE("Invalid Output profile max open count %u for profile %s",
+                      outProfile->maxOpenCount, outProfile->getTagName().c_str());
+                continue;
+            }
+            if (!outProfile->hasSupportedDevices()) {
+                ALOGW("Output profile contains no device on module %s", hwModule->getName());
+                continue;
+            }
+            if ((outProfile->getFlags() & AUDIO_OUTPUT_FLAG_TTS) != 0) {
+                mTtsOutputAvailable = true;
+            }
+
+            if ((outProfile->getFlags() & AUDIO_OUTPUT_FLAG_DIRECT) != 0) {
+                continue;
+            }
+            const DeviceVector &supportedDevices = outProfile->getSupportedDevices();
+
+            DeviceVector availProfileDevices = supportedDevices.filter(mAvailableOutputDevices);
+            sp<DeviceDescriptor> supportedDevice = 0;
+
+            if (supportedDevices.contains(mDefaultOutputDevice)) {
+                supportedDevice = mDefaultOutputDevice;
+            } else {
+
+                if (availProfileDevices.isEmpty()) {
+                    continue;
+                }
+
+                supportedDevice = availProfileDevices.itemAt(0);
+            }
+
+            if (!mAvailableOutputDevices.contains(supportedDevice)) {
+                continue;
+            }
+
+            sp<SwAudioOutputDescriptor> outputDesc = new SwAudioOutputDescriptor(outProfile,
+                                                                                 mpClientInterface);
+            audio_io_handle_t output = AUDIO_IO_HANDLE_NONE;
+
+            status_t status = outputDesc->open(nullptr, DeviceVector(supportedDevice),
+                                               AUDIO_STREAM_DEFAULT,
+                                               AUDIO_OUTPUT_FLAG_NONE, &output);
+            if (status != NO_ERROR) {
+                ALOGW("Cannot open output stream for devices %s on hw module %s",
+                      supportedDevice->toString().c_str(), hwModule->getName());
+                continue;
+            }
+            for (const auto &device : availProfileDevices) {
+
+                if (!device->isAttached()) {
+                    device->attach(hwModule);
+                }
+            }
+
+            if (mPrimaryOutput == 0 &&
+                    outProfile->getFlags() & AUDIO_OUTPUT_FLAG_PRIMARY) {
+                mPrimaryOutput = outputDesc;
+            }
+
+            addOutput(output, outputDesc);
+
+            setOutputDevices(outputDesc,
+                             DeviceVector(supportedDevice),
+                             true,
+                             0,
+                             NULL);
+        }
+```
+
+看的头生疼，首先hwModule->getOutputProfiles()其实拿到的是HwModule中的mOutputProfiles
+
+## **mOutputProfiles**
+
+类型： Vector
+
+```cpp
+!mSupportedDevices.isEmpty()
+```
+
+## **mSupportedDevices**
+
+类型：DeviceVector : public SortedVector
+
+```cpp
+ <route type="mix" sink="Earpiece"
+                       sources="primary output,deep_buffer,BT SCO Headset Mic"/>
+
+```
+
+其次route的sink可以是device，也可以是一个mixPort，route里的source也是一样。然后一个sink对应一个route（一般都是这样的），一个source可以对应多个route。那么SupportedDevices是怎么来的呢？先遍历mixport找到role="sink"（即inputProfile）然后在遍历route找到route中sink与inputProfile一样的那条route，这样我们就定位到此route下的sources，然后把sources里是device的source过滤出来就组成了inputProfile的SupportedDevices。然后再看outputProfile的SupportedDevices。也是先找mixport找到role="source"（即outputProfile）然后遍历route，在每个route的sources中找name与mixport中的outputProfile相等的，定位到对应route后，然后把此route的sink存起来，因为一个source对应多个route，那么存起来的route的sink也就又是一个集合，然后也是过滤出是device的组成了outputProfile的SupportedDevices。举个例子比如我们primary output它的SupportedDevices就是Earpiece、Speaker、Wired Headset和Wired Headphones，primary input的SupportedDevices是Built-In Mic、Built-In Back Mic、Wired Headset Mic、BT SCO Headset Mic。结合上边的xml理解起来就容易多了。继续看又有一个mAvailableOutputDevices，
+
+## **mAvailableInputDevices**
+
+类型 ：DeviceVector : public SortedVector
+
+```cpp
+            <attachedDevices>
+                <item>Speaker</item>
+                <item>Built-In Mic</item>
+                <item>Built-In Back Mic</item>
+            </attachedDevices>
+```
+
+具体的流程就是先找到item然后在找对应device根据type计算出是outdevice还是inputdevice，这个计算方式也简单，因为作为inputdevice都是与BIT_IN | 运算的，因此判断的逻辑就是用device的type和BIT_IN 做&运算，这样inputdevice的结果是1，outputdevice的结果是0，在把区分这些放进vector中就成了mAvailableOutputDevices和mAvailableInputDevices。其实我们也可以参照< devicePort >中role="source"即为input的device用，role="source"为output的device。如下源码位置定义了所有的device的type
+system/media/audio/include/system/audio-base.h
+然后在SupportedDevices中过滤出mAvailableInputDevices
+
+## **mDefaultOutputDevice**
+
+类型： sp< DeviceDescriptor>
+这个很好理解对应xml中
+
+```cpp
+<defaultOutputDevice>Speaker</defaultOutputDevice>
+```
+
+这块逻辑就是从supportDevice中过滤出availableDevice，如果这里有defaultDevice就用default如果没有，则在过滤完的devices中选第一个来构造我们的outputDesc
+
+## **outputDesc**
+
+类型：SwAudioOutputDescriptor: public AudioOutputDescriptor，
+AudioOutputDescriptor: public AudioPortConfig, public AudioIODescriptorInterface, public ClientMapHandler< TrackClientDescriptor>
+这个就是输出通道的描述符，这里包含了对应mixPort的全部信息。然后将output作为key，outputDesc作为value存入mOutputs中统一管理。
+
+## **mOutputs**
+
+类型：SwAudioOutputCollection : public DefaultKeyedVector< audio_io_handle_t, sp< SwAudioOutputDescriptor> >
+
+真是层层递进呀，那mOutputs到这里我们也知道是是什么了。
+initialize()后续代码分析input的原理跟out的相同，这里就不多说了。
+
+关于AudioPolicyManager的audio_policy_configuration.xml解析，我们主要分析的是解析module，具体又分了 mixPort devicePort和route三部分。其中route理解起来可能会复杂一些。但audio_policy_configuration.xml解析这个很重要，因为所有的内容都是从这个XML中解析来的，而且这个XML的解析又涉及很多类，需要耐心去分析。
+
+以上如有问题，欢迎大家指正交流~
