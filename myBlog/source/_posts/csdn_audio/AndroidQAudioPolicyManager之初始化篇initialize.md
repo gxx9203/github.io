@@ -6,6 +6,9 @@ keywords: AndroidQAudioPolicyManager之初始化篇initialize
 author: 轻量级Lz Csdn认证博客专家 Csdn认证企业博客 码龄9年 暂无认证
 date: 2020-05-31T15:29:00.000Z
 publisher: null
+tags:
+    - CSDN转载
+    - Audio
 stats: paragraph=120 sentences=112, words=2193
 ---
 关于AudioPolicyManager网上的资料很多，但大多是关于解析audio_policy_configuration.xml解析，这个确实很重要，因为AudioPolicyManager所有初始化赋值基本都是从这个xml的解析开始的，但关于这个xml解析可以结合网上一些资料以及源码自己慢慢琢磨，只有这个弄明白了，AudioPolicyManager中的东西才好继续研究，源码路径如下
