@@ -1,0 +1,1512 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Android10.0CarAudioZone（一）">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>Android10.0CarAudioZone（一） | Hexo</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">Hexo</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>Index</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>Tags</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>Categories</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>Archives</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>About</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>Contact</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>Friends</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="Search" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">Hexo</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			Index
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			Tags
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			Categories
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			Archives
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			About
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			Contact
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			Friends
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/gxx9203/gxx9203.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/gxx9203/gxx9203.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/13.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Android10.0CarAudioZone（一）</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/CSDN%E8%BD%AC%E8%BD%BD/">
+                                <span class="chip bg-color">CSDN转载</span>
+                            </a>
+                        
+                            <a href="/tags/Audio/">
+                                <span class="chip bg-color">Audio</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
+                    2020-04-30
+                </div>
+                
+
+                
+
+                
+
+                
+
+                
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <p>关于CarAudioZone也就是多音区的一个概念，主要是在AndroidQ上实现的。我们可以参照官方的文档<a target="_blank" rel="noopener" href="https://source.android.google.cn/devices/automotive/audio/multi_zone/overview">Multi-Zone Overview</a>，我的英语实在不敢恭维，这里就不翻译了，大家阅读自行翻译吧。我简单描述下多音区的概念，就是这么一种环境，后排乘客通过后排屏幕可以看电影，前排司机通过前排屏幕可以听音乐，大家互不影响。每一个屏都有自己专属的一个区域也就是zone的概念。这种前后屏的概念可能在的一些士的上体现的更好，我记得我曾经去过一个城市，乘客坐后排通过后座的屏幕可以了解这个城市的旅游景点，文化特色等，而前排司机就可以不受干扰的听他的交通广播了，扯远了哈，其实这种场景还有一种使用场景就是带主副屏的车机，比如现在好多汽车都是主副屏联动的，有了这个，我们都可以参照来实现了。</p>
+<p>今天还是从源码的角度来分析carAudioZone这块，我们也是从CarAudioService中开始说吧，虽然之前分析了<a target="_blank" rel="noopener" href="https://blog.csdn.net/l328873524/article/details/102964876">Android9.0CarAudio分析之一启动过程</a>但我们今天基于Android10.0在来看看CarAudioZone这块。首先</p>
+<pre><code class="java">private final boolean mUseDynamicRouting;
+</code></pre>
+<p>如果想使用CarAudioZone这套，mUseDynamicRouting一定要设置为true。这个值是来自</p>
+<pre><code class="java">packages/services/Car/service/res/values/config.xml
+&lt;bool name=&quot;audioUseDynamicRouting&quot;&gt;false&lt;/bool&gt;
+</code></pre>
+<p>中，我们发现默认是false，但我们一般很少去改动原生目录下的配置，建议通过overlay的方式实现。 <strong>如果audioUseDynamicRouting为false，则CarAudio中的逻辑就会走到Android原生的AudioManager和AudioService中去了。这也算是一个兼容处理吧</strong><br>我们先看下CarAudioService的构造函数</p>
+<pre><code class="java">    public CarAudioService(Context context) &#123;
+        mContext = context;
+        mTelephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
+        mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+        mUseDynamicRouting = mContext.getResources().getBoolean(R.bool.audioUseDynamicRouting);
+        mPersistMasterMuteState = mContext.getResources().getBoolean(
+                R.bool.audioPersistMasterMuteState);
+        mUidToZoneMap = new HashMap&lt;&gt;();
+    &#125;
+</code></pre>
+<p>相比之前版本多了mUidToZoneMap，一个map的集合定义如下</p>
+<pre><code class="java">private Map&lt;Integer, Integer&gt; mUidToZoneMap;
+</code></pre>
+<p>这个后续我们用到在细说，构造函数结束就是init了</p>
+<pre><code class="java">    public void init() &#123;
+        synchronized (mImplLock) &#123;
+            if (mUseDynamicRouting) &#123;
+
+                AudioDeviceInfo[] deviceInfos = mAudioManager.getDevices(
+                        AudioManager.GET_DEVICES_OUTPUTS);
+                if (deviceInfos.length == 0) &#123;
+                    Log.e(CarLog.TAG_AUDIO, &quot;No output device available, ignore&quot;);
+                    return;
+                &#125;
+                SparseArray&lt;CarAudioDeviceInfo&gt; busToCarAudioDeviceInfo = new SparseArray&lt;&gt;();
+                for (AudioDeviceInfo info : deviceInfos) &#123;
+                    Log.v(CarLog.TAG_AUDIO, String.format(&quot;output id=%d address=%s type=%s&quot;,
+                            info.getId(), info.getAddress(), info.getType()));
+                    if (info.getType() == AudioDeviceInfo.TYPE_BUS) &#123;
+                        final CarAudioDeviceInfo carInfo = new CarAudioDeviceInfo(info);
+
+                        if (carInfo.getBusNumber() &gt;= 0) &#123;
+                            busToCarAudioDeviceInfo.put(carInfo.getBusNumber(), carInfo);
+                            Log.i(CarLog.TAG_AUDIO, &quot;Valid bus found &quot; + carInfo);
+                        &#125;
+                    &#125;
+                &#125;
+                setupDynamicRouting(busToCarAudioDeviceInfo);
+            &#125; else &#123;
+                Log.i(CarLog.TAG_AUDIO, &quot;Audio dynamic routing not enabled, run in legacy mode&quot;);
+                setupLegacyVolumeChangedListener();
+            &#125;
+
+            if (mPersistMasterMuteState) &#123;
+                boolean storedMasterMute = Settings.Global.getInt(mContext.getContentResolver(),
+                        VOLUME_SETTINGS_KEY_MASTER_MUTE, 0) != 0;
+                setMasterMute(storedMasterMute, 0);
+            &#125;
+        &#125;
+    &#125;
+</code></pre>
+<p>init逻辑分了几个阶段第一个阶段是找output device。关于找output device的逻辑可参照<a target="_blank" rel="noopener" href="https://blog.csdn.net/l328873524/article/details/105189766">Android10.0AudioFocus之如何使用（一）</a>和二。然后根据deviceType是TYPE_BUS的拿出来在重新封装到CarAudioDeviceInfo中，我们在getDevices的时候，还记得有的device是AUDIO_DEVICE_OUT_BUS，所有使用AUDIO_DEVICE_OUT_BUS的都会有个address，而且address一定是不相同的。其实这里过滤的就是这个deviceType是AUDIO_DEVICE_OUT_BUS的即</p>
+<pre><code class="java">public static final int DEVICE_OUT_BUS = 0x1000000;
+</code></pre>
+<p>我们在简单看下CarAudioDeviceInfo吧</p>
+<pre><code class="java">    CarAudioDeviceInfo(AudioDeviceInfo audioDeviceInfo) &#123;
+        mAudioDeviceInfo = audioDeviceInfo;
+        mBusNumber = parseDeviceAddress(audioDeviceInfo.getAddress());
+        mSampleRate = getMaxSampleRate(audioDeviceInfo);
+        mEncodingFormat = getEncodingFormat(audioDeviceInfo);
+        mChannelCount = getMaxChannels(audioDeviceInfo);
+        final AudioGain audioGain = Preconditions.checkNotNull(
+                getAudioGain(), &quot;No audio gain on device port &quot; + audioDeviceInfo);
+        mDefaultGain = audioGain.defaultValue();
+        mMaxGain = audioGain.maxValue();
+        mMinGain = audioGain.minValue();
+
+        mCurrentGain = -1;
+    &#125;
+</code></pre>
+<p>说下mBusNumber 这个我们看下audio_policy_volumes.xml中的定义就明白了</p>
+<pre><code class="cpp">&lt;devicePort tagName=&quot;bus0_media_out&quot; role=&quot;sink&quot; type=&quot;AUDIO_DEVICE_OUT_BUS&quot;
+                        address=&quot;bus0_media_out&quot;&gt;
+                    &lt;profile name=&quot;&quot; format=&quot;AUDIO_FORMAT_PCM_16_BIT&quot;
+                            samplingRates=&quot;48000&quot; channelMasks=&quot;AUDIO_CHANNEL_OUT_STEREO&quot;/&gt;
+                    &lt;gains&gt;
+                        &lt;gain name=&quot;&quot; mode=&quot;AUDIO_GAIN_MODE_JOINT&quot;
+                                minValueMB=&quot;-3200&quot; maxValueMB=&quot;600&quot; defaultValueMB=&quot;0&quot; stepValueMB=&quot;100&quot;/&gt;
+                    &lt;/gains&gt;
+                &lt;/devicePort&gt;
+</code></pre>
+<p>mBusNumber 就是取得bus0_media_out，这个是怎么截取的呢，源码就不贴了，找到bus和第一个”_”中间的字符截取出来转成int，比如这个mBusNumber 就是0，关于截取这个最大是三位，像之前的版本都是bus00X_XXXX的。采样率 channel数都是根据配置来的，AudioGain是控制音量的。<br>我们继续，拿到了CarAudioDeviceInfo的集合后，则调用了setupDynamicRouting(busToCarAudioDeviceInfo)方法，代码很长，我们一点一点分析</p>
+<pre><code class="java">  private void setupDynamicRouting(SparseArray&lt;CarAudioDeviceInfo&gt; busToCarAudioDeviceInfo) &#123;
+
+        final AudioPolicy.Builder builder = new AudioPolicy.Builder(mContext);
+        builder.setLooper(Looper.getMainLooper());
+
+        mCarAudioConfigurationPath = getAudioConfigurationPath();
+        if (mCarAudioConfigurationPath != null) &#123;
+            try (InputStream inputStream = new FileInputStream(mCarAudioConfigurationPath)) &#123;
+                CarAudioZonesHelper zonesHelper = new CarAudioZonesHelper(mContext, inputStream,
+                        busToCarAudioDeviceInfo);
+                mCarAudioZones = zonesHelper.loadAudioZones();
+            &#125; catch (IOException | XmlPullParserException e) &#123;
+                throw new RuntimeException(&quot;Failed to parse audio zone configuration&quot;, e);
+            &#125;
+        &#125; else &#123;
+
+            final IAudioControl audioControl = getAudioControl();
+            if (audioControl == null) &#123;
+                throw new RuntimeException(
+                        &quot;Dynamic routing requested but audioControl HAL not available&quot;);
+            &#125;
+            CarAudioZonesHelperLegacy legacyHelper = new CarAudioZonesHelperLegacy(mContext,
+                    R.xml.car_volume_groups, busToCarAudioDeviceInfo, audioControl);
+            mCarAudioZones = legacyHelper.loadAudioZones();
+        &#125;
+        for (CarAudioZone zone : mCarAudioZones) &#123;
+            if (!zone.validateVolumeGroups()) &#123;
+                throw new RuntimeException(&quot;Invalid volume groups configuration&quot;);
+            &#125;
+
+            zone.synchronizeCurrentGainIndex();
+            Log.v(CarLog.TAG_AUDIO, &quot;Processed audio zone: &quot; + zone);
+        &#125;
+
+        final CarAudioDynamicRouting dynamicRouting = new CarAudioDynamicRouting(mCarAudioZones);
+        dynamicRouting.setupAudioDynamicRouting(builder);
+
+        builder.setAudioPolicyVolumeCallback(mAudioPolicyVolumeCallback);
+
+        if (sUseCarAudioFocus) &#123;
+
+            mFocusHandler = new CarZonesAudioFocus(mAudioManager,
+                    mContext.getPackageManager(),
+                    mCarAudioZones);
+            builder.setAudioPolicyFocusListener(mFocusHandler);
+            builder.setIsAudioFocusPolicy(true);
+        &#125;
+
+        mAudioPolicy = builder.build();
+        if (sUseCarAudioFocus) &#123;
+
+            mFocusHandler.setOwningPolicy(this, mAudioPolicy);
+        &#125;
+
+        int r = mAudioManager.registerAudioPolicy(mAudioPolicy);
+        if (r != AudioManager.SUCCESS) &#123;
+            throw new RuntimeException(&quot;registerAudioPolicy failed &quot; + r);
+        &#125;
+    &#125;
+</code></pre>
+<p>我们一点一点分析，先看下获取getAudioConfigurationPath();</p>
+<pre><code class="java">       private static final String[] AUDIO_CONFIGURATION_PATHS = new String[] &#123;
+            &quot;/vendor/etc/car_audio_configuration.xml&quot;,
+            &quot;/system/etc/car_audio_configuration.xml&quot;
+    &#125;;
+    private String getAudioConfigurationPath() &#123;
+        for (String path : AUDIO_CONFIGURATION_PATHS) &#123;
+            File configuration = new File(path);
+            if (configuration.exists()) &#123;
+                return path;
+            &#125;
+        &#125;
+        return null;
+    &#125;
+</code></pre>
+<p>首先加载vendor/etc下的，如果vendor/etc没有则加载system/etc，android系统中一般配置文件都是这么一个加载顺序，先加载vendor下，如果没有，在加载系统默认的。拿到path后则开始解析</p>
+<pre><code class="java"> try (InputStream inputStream = new FileInputStream(mCarAudioConfigurationPath)) &#123;
+                CarAudioZonesHelper zonesHelper = new CarAudioZonesHelper(mContext, inputStream,
+                        busToCarAudioDeviceInfo);
+                mCarAudioZones = zonesHelper.loadAudioZones();
+            &#125; catch (IOException | XmlPullParserException e) &#123;
+                throw new RuntimeException(&quot;Failed to parse audio zone configuration&quot;, e);
+            &#125;
+</code></pre>
+<p>我们继续看下CarAudioZonesHelper的创建和它的loadAudioZones()过程。</p>
+<pre><code class="java">    CarAudioZonesHelper(Context context, @NonNull InputStream inputStream,
+            @NonNull SparseArray&lt;CarAudioDeviceInfo&gt; busToCarAudioDeviceInfo) &#123;
+        mContext = context;
+        mInputStream = inputStream;
+        mBusToCarAudioDeviceInfo = busToCarAudioDeviceInfo;
+
+        mNextSecondaryZoneId = CarAudioManager.PRIMARY_AUDIO_ZONE + 1;
+        mPortIds = new HashSet&lt;&gt;();
+    &#125;
+</code></pre>
+<p>构造方法很简单，做了一些初始化，继续看load</p>
+<pre><code class="java">    CarAudioZone[] loadAudioZones() throws IOException, XmlPullParserException &#123;
+        List&lt;CarAudioZone&gt; carAudioZones = new ArrayList&lt;&gt;();
+        parseCarAudioZones(carAudioZones, mInputStream);
+        return carAudioZones.toArray(new CarAudioZone[0]);
+    &#125;
+</code></pre>
+<p>这里主要是对刚传入path的一个解析，为了理解解析的过程，我把car_audio_configuration.xml贴出来</p>
+<pre><code class="c">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;carAudioConfiguration version=&quot;1&quot;&gt;
+    &lt;zones&gt;
+        &lt;zone name=&quot;primary zone&quot; isPrimary=&quot;true&quot;&gt;
+            &lt;volumeGroups&gt;
+                &lt;group&gt;
+                    &lt;device address=&quot;bus0_media_out&quot;&gt;
+                        &lt;context context=&quot;music&quot;/&gt;
+                    &lt;/device&gt;
+                    &lt;device address=&quot;bus3_call_ring_out&quot;&gt;
+                        &lt;context context=&quot;call_ring&quot;/&gt;
+                    &lt;/device&gt;
+                &lt;/group&gt;
+                &lt;group&gt;
+                    &lt;device address=&quot;bus1_navigation_out&quot;&gt;
+                        &lt;context context=&quot;navigation&quot;/&gt;
+                    &lt;/device&gt;
+                &lt;/group&gt;
+            &lt;/volumeGroups&gt;
+            &lt;displays&gt;
+                &lt;display port=&quot;1&quot;/&gt;
+                &lt;display port=&quot;2&quot;/&gt;
+            &lt;/displays&gt;
+        &lt;/zone&gt;
+        &lt;zone name=&quot;rear seat zone&quot;&gt;
+            &lt;volumeGroups&gt;
+                &lt;group&gt;
+                    &lt;device address=&quot;bus100_rear_seat&quot;&gt;
+                        &lt;context context=&quot;music&quot;/&gt;
+                        &lt;context context=&quot;navigation&quot;/&gt;
+                        &lt;context context=&quot;voice_command&quot;/&gt;
+                        &lt;context context=&quot;call_ring&quot;/&gt;
+                        &lt;context context=&quot;call&quot;/&gt;
+                        &lt;context context=&quot;alarm&quot;/&gt;
+                        &lt;context context=&quot;notification&quot;/&gt;
+                        &lt;context context=&quot;system_sound&quot;/&gt;
+                    &lt;/device&gt;
+                &lt;/group&gt;
+            &lt;/volumeGroups&gt;
+        &lt;/zone&gt;
+    &lt;/zones&gt;
+&lt;/carAudioConfiguration&gt;
+</code></pre>
+<p>我简单说下解析过程，先找name和isPrimary，在CarAudioZone中isPrimary只能有一个，如果是isPrimary则id是PRIMARY_AUDIO_ZONE ，否则是mNextSecondaryZoneId+1，关于除了primary的id的计算挺有意思。</p>
+<pre><code class="js">    private int getNextSecondaryZoneId() &#123;
+        int zoneId = mNextSecondaryZoneId;
+        mNextSecondaryZoneId += 1;
+        return zoneId;
+    &#125;
+</code></pre>
+<p>看到源码mNextSecondaryZoneId在初始化的时候，已经是1了，这里加1就变成了2，但虽然计算了，但返回的还是上次的值，也就是1，说白了就是primary是0，剩下累加1，有点意思。根据zone的标签我们知道了最终会创建多少个CarAudioZone，也就是最终返回的List&lt; CarAudioZone&gt;的size大小，我们继续再看具体的CarAudioZone里面有什么，首先是mVolumeGroups，CarAudioZone中会有一个mVolumeGroups的集合，而每个CarVolumeGroup都有什么呢？</p>
+<pre><code class="java">    CarVolumeGroup(Context context, int zoneId, int id) &#123;
+        mContentResolver = context.getContentResolver();
+        mZoneId = zoneId;
+        mId = id;
+        mStoredGainIndex = Settings.Global.getInt(mContentResolver,
+                CarAudioService.getVolumeSettingsKeyForGroup(mZoneId, mId), -1);
+    &#125;
+</code></pre>
+<p>mZoneId 我们知道就是之前分析的那个zoneId，mId就是我们我们每次mVolumeGroups.add的时候会传入一个从0开始累加的一个数，也就可以理解为list的索引，mStoredGainIndex数据库存存储的值。我们继续，group下就是device了，接下来就是根据device找的busNumber，busNumber之前也说过了，拿到busNumber后，解析context，有个map关系，根据context可以找到contextNumber</p>
+<pre><code class="java">    static &#123;
+        CONTEXT_NAME_MAP = new HashMap&lt;&gt;();
+        CONTEXT_NAME_MAP.put(&quot;music&quot;, ContextNumber.MUSIC);
+        CONTEXT_NAME_MAP.put(&quot;navigation&quot;, ContextNumber.NAVIGATION);
+        CONTEXT_NAME_MAP.put(&quot;voice_command&quot;, ContextNumber.VOICE_COMMAND);
+        CONTEXT_NAME_MAP.put(&quot;call_ring&quot;, ContextNumber.CALL_RING);
+        CONTEXT_NAME_MAP.put(&quot;call&quot;, ContextNumber.CALL);
+        CONTEXT_NAME_MAP.put(&quot;alarm&quot;, ContextNumber.ALARM);
+        CONTEXT_NAME_MAP.put(&quot;notification&quot;, ContextNumber.NOTIFICATION);
+        CONTEXT_NAME_MAP.put(&quot;system_sound&quot;, ContextNumber.SYSTEM_SOUND);
+    &#125;
+</code></pre>
+<p>有了busNumber，还可以找CarAudioDeviceInfo即mBusToCarAudioDeviceInfo.get(busNumber)，mBusToCarAudioDeviceInfo还记得刚才构建CarAudioDeviceInfo的之后我们创建了CarAudioZonesHelper传入的。这样拿到了busNumber、contextNumber和CarAudioDeviceInfo我们就可以做CarVolumeGroup的bind了</p>
+<pre><code class="java">    void bind(int contextNumber, int busNumber, CarAudioDeviceInfo info) &#123;
+        if (mBusToCarAudioDeviceInfo.size() == 0) &#123;
+            mStepSize = info.getAudioGain().stepValue();
+        &#125; else &#123;
+            Preconditions.checkArgument(
+                    info.getAudioGain().stepValue() == mStepSize,
+                    &quot;Gain controls within one group must have same step value&quot;);
+        &#125;
+
+        mContextToBus.put(contextNumber, busNumber);
+        mBusToCarAudioDeviceInfo.put(busNumber, info);
+
+        if (info.getDefaultGain() &gt; mDefaultGain) &#123;
+
+            mDefaultGain = info.getDefaultGain();
+        &#125;
+        if (info.getMaxGain() &gt; mMaxGain) &#123;
+            mMaxGain = info.getMaxGain();
+        &#125;
+        if (info.getMinGain() &lt; mMinGain) &#123;
+            mMinGain = info.getMinGain();
+        &#125;
+        if (mStoredGainIndex &lt; getMinGainIndex() || mStoredGainIndex &gt; getMaxGainIndex()) &#123;
+
+            mCurrentGainIndex = getIndexForGain(mDefaultGain);
+        &#125; else &#123;
+
+            mCurrentGainIndex = mStoredGainIndex;
+        &#125;
+    &#125;
+</code></pre>
+<p>因为group下所有音量都是一个步长，所以步长只赋值一次。mContextToBus把contextNumber和 busNumber存入map，mBusToCarAudioDeviceInfo则是把busNumber和info又重新存了一下，一个device下不管多少个context，volume对应的都是一次赋值。max min 以及current volume都是如此。<br><strong>简单总结每个group下的所有音量的步长都是一样的，每个group下device下的所有context的最大、最小、默认以及当前音量都是一样的。这有一个小问题要注意就是这个步长是以第一个device的步长为准，如果我们group下很多device，每个device的步长又不一样，那么就以第一device的步长为准</strong><br>到此音量就结束了，还有一个display的标签，刚才没有分析的mPortIds，其实就是通过解析这个display标签下的port然后存入mPortIds的集和中的，mPortIds除了判断重复好像也没啥大用。然后根据portId创建了一个DisplayAddress.Physical physicalDisplayAddress，然后加入到这个 private final List</p>
+<p>今天就先分析到这里，从CarAudioService到解析构造CarVolumeGroup的过程，我们发现其实在CarAudio中的声音其实是根据group下的device下的context来区分的，一个device下的所有context的音量是一样的。明天继续分析CarZonesAudioFocus~</p>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        Author:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">轻量级Lz Csdn认证博客专家 Csdn认证企业博客 码龄9年 暂无认证</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        Link:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="http://gxx9203.github.io/2020/04/30/csdn_audio/Android10.0CarAudioZone1/">http://gxx9203.github.io/2020/04/30/csdn_audio/Android10.0CarAudioZone1/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        Reprint policy:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    All articles in this blog are used except for special statements
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    reprint polocy. If reproduced, please indicate source
+                    <a href="/about" target="_blank">轻量级Lz Csdn认证博客专家 Csdn认证企业博客 码龄9年 暂无认证</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>Copied successfully, please follow the reprint policy of this article</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">more</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/CSDN%E8%BD%AC%E8%BD%BD/">
+                                    <span class="chip bg-color">CSDN转载</span>
+                                </a>
+                            
+                                <a href="/tags/Audio/">
+                                    <span class="chip bg-color">Audio</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
+            <div class="card">
+                <a href="/2020/05/02/csdn_audio/Android10.0CarAudioZone2/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="Android10.0CarAudioZone（二）">
+                        
+                        <span class="card-title">Android10.0CarAudioZone（二）</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2020-05-02
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            轻量级Lz Csdn认证博客专家 Csdn认证企业博客 码龄9年 暂无认证
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/CSDN%E8%BD%AC%E8%BD%BD/">
+                        <span class="chip bg-color">CSDN转载</span>
+                    </a>
+                    
+                    <a href="/tags/Audio/">
+                        <span class="chip bg-color">Audio</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                Next&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2020/04/20/csdn_audio/Android10.0MediaPlayerService%E4%B8%AD%E9%80%89%E6%8B%A9player%E7%9A%84%E8%AF%84%E5%88%86%E6%9C%BA%E5%88%B6/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/20.jpg" class="responsive-img" alt="Android10.0MediaPlayerService中选择player的评分机制">
+                        
+                        <span class="card-title">Android10.0MediaPlayerService中选择player的评分机制</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2020-04-20
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            轻量级Lz Csdn认证博客专家 Csdn认证企业博客 码龄9年 暂无认证
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/CSDN%E8%BD%AC%E8%BD%BD/">
+                        <span class="chip bg-color">CSDN转载</span>
+                    </a>
+                    
+                    <a href="/tags/Audio/">
+                        <span class="chip bg-color">Audio</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;TOC</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+        left: -66px !important;
+    }
+
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+        left: 0px !important;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="playlist"
+                   id="503838841"
+                   fixed='true'
+                   autoplay='false'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+
+    
+    <div class="container row center-align" style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2019-2021</span>
+            
+            <span id="year">2019</span>
+            <a href="/about" target="_blank">gxx9203</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/gxx9203" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;Search</span>
+            <input type="search" id="searchInput" name="s" placeholder="Please enter a search keyword"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+	
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>

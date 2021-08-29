@@ -1,0 +1,1388 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="keywords" content="Understanding Audio Focus (Part 3 / 3)">
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit|ie-stand|ie-comp">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+
+
+    <title>Understanding Audio Focus (Part 3 / 3) | Hexo</title>
+    <link rel="icon" type="image/png" href="/favicon.png">
+
+    <link rel="stylesheet" type="text/css" href="/libs/awesome/css/all.css">
+    <link rel="stylesheet" type="text/css" href="/libs/materialize/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/aos/aos.css">
+    <link rel="stylesheet" type="text/css" href="/libs/animate/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="/libs/lightGallery/css/lightgallery.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/matery.css">
+    <link rel="stylesheet" type="text/css" href="/css/my.css">
+
+    <script src="/libs/jquery/jquery.min.js"></script>
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+
+
+<body>
+    <header class="navbar-fixed">
+    <nav id="headNav" class="bg-color nav-transparent">
+        <div id="navContainer" class="nav-wrapper container">
+            <div class="brand-logo">
+                <a href="/" class="waves-effect waves-light">
+                    
+                    <img src="/medias/logo.png" class="logo-img" alt="LOGO">
+                    
+                    <span class="logo-span">Hexo</span>
+                </a>
+            </div>
+            
+
+<a href="#" data-target="mobile-nav" class="sidenav-trigger button-collapse"><i class="fas fa-bars"></i></a>
+<ul class="right nav-menu">
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/" class="waves-effect waves-light">
+      
+      <i class="fas fa-home" style="zoom: 0.6;"></i>
+      
+      <span>Index</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/tags" class="waves-effect waves-light">
+      
+      <i class="fas fa-tags" style="zoom: 0.6;"></i>
+      
+      <span>Tags</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/categories" class="waves-effect waves-light">
+      
+      <i class="fas fa-bookmark" style="zoom: 0.6;"></i>
+      
+      <span>Categories</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/archives" class="waves-effect waves-light">
+      
+      <i class="fas fa-archive" style="zoom: 0.6;"></i>
+      
+      <span>Archives</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/about" class="waves-effect waves-light">
+      
+      <i class="fas fa-user-circle" style="zoom: 0.6;"></i>
+      
+      <span>About</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/contact" class="waves-effect waves-light">
+      
+      <i class="fas fa-comments" style="zoom: 0.6;"></i>
+      
+      <span>Contact</span>
+    </a>
+    
+  </li>
+  
+  <li class="hide-on-med-and-down nav-item">
+    
+    <a href="/friends" class="waves-effect waves-light">
+      
+      <i class="fas fa-address-book" style="zoom: 0.6;"></i>
+      
+      <span>Friends</span>
+    </a>
+    
+  </li>
+  
+  <li>
+    <a href="#searchModal" class="modal-trigger waves-effect waves-light">
+      <i id="searchIcon" class="fas fa-search" title="Search" style="zoom: 0.85;"></i>
+    </a>
+  </li>
+</ul>
+
+
+<div id="mobile-nav" class="side-nav sidenav">
+
+    <div class="mobile-head bg-color">
+        
+        <img src="/medias/logo.png" class="logo-img circle responsive-img">
+        
+        <div class="logo-name">Hexo</div>
+        <div class="logo-desc">
+            
+            Never really desperate, only the lost of the soul.
+            
+        </div>
+    </div>
+
+    
+
+    <ul class="menu-list mobile-menu-list">
+        
+        <li class="m-nav-item">
+	  
+		<a href="/" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-home"></i>
+			
+			Index
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/tags" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-tags"></i>
+			
+			Tags
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/categories" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-bookmark"></i>
+			
+			Categories
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/archives" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-archive"></i>
+			
+			Archives
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/about" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-user-circle"></i>
+			
+			About
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/contact" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-comments"></i>
+			
+			Contact
+		</a>
+          
+        </li>
+        
+        <li class="m-nav-item">
+	  
+		<a href="/friends" class="waves-effect waves-light">
+			
+			    <i class="fa-fw fas fa-address-book"></i>
+			
+			Friends
+		</a>
+          
+        </li>
+        
+        
+        <li><div class="divider"></div></li>
+        <li>
+            <a href="https://github.com/gxx9203/gxx9203.github.io" class="waves-effect waves-light" target="_blank">
+                <i class="fab fa-github-square fa-fw"></i>Fork Me
+            </a>
+        </li>
+        
+    </ul>
+</div>
+
+
+        </div>
+
+        
+            <style>
+    .nav-transparent .github-corner {
+        display: none !important;
+    }
+
+    .github-corner {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        right: 0;
+        border: 0;
+        transform: scale(1.1);
+    }
+
+    .github-corner svg {
+        color: #0f9d58;
+        fill: #fff;
+        height: 64px;
+        width: 64px;
+    }
+
+    .github-corner:hover .octo-arm {
+        animation: a 0.56s ease-in-out;
+    }
+
+    .github-corner .octo-arm {
+        animation: none;
+    }
+
+    @keyframes a {
+        0%,
+        to {
+            transform: rotate(0);
+        }
+        20%,
+        60% {
+            transform: rotate(-25deg);
+        }
+        40%,
+        80% {
+            transform: rotate(10deg);
+        }
+    }
+</style>
+
+<a href="https://github.com/gxx9203/gxx9203.github.io" class="github-corner tooltipped hide-on-med-and-down" target="_blank"
+   data-tooltip="Fork Me" data-position="left" data-delay="50">
+    <svg viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path>
+        <path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2"
+              fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path>
+        <path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z"
+              fill="currentColor" class="octo-body"></path>
+    </svg>
+</a>
+        
+    </nav>
+
+</header>
+
+    
+
+
+
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/17.jpg')">
+    <div class="container" style="right: 0px;left: 0px;">
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div class="brand">
+                    <h1 class="description center-align post-title">Understanding Audio Focus (Part 3 / 3)</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<main class="post-container content">
+
+    
+    <link rel="stylesheet" href="/libs/tocbot/tocbot.css">
+<style>
+    #articleContent h1::before,
+    #articleContent h2::before,
+    #articleContent h3::before,
+    #articleContent h4::before,
+    #articleContent h5::before,
+    #articleContent h6::before {
+        display: block;
+        content: " ";
+        height: 100px;
+        margin-top: -100px;
+        visibility: hidden;
+    }
+
+    #articleContent :focus {
+        outline: none;
+    }
+
+    .toc-fixed {
+        position: fixed;
+        top: 64px;
+    }
+
+    .toc-widget {
+        width: 345px;
+        padding-left: 20px;
+    }
+
+    .toc-widget .toc-title {
+        padding: 35px 0 15px 17px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        line-height: 1.5rem;
+    }
+
+    .toc-widget ol {
+        padding: 0;
+        list-style: none;
+    }
+
+    #toc-content {
+        padding-bottom: 30px;
+        overflow: auto;
+    }
+
+    #toc-content ol {
+        padding-left: 10px;
+    }
+
+    #toc-content ol li {
+        padding-left: 10px;
+    }
+
+    #toc-content .toc-link:hover {
+        color: #42b983;
+        font-weight: 700;
+        text-decoration: underline;
+    }
+
+    #toc-content .toc-link::before {
+        background-color: transparent;
+        max-height: 25px;
+
+        position: absolute;
+        right: 23.5vw;
+        display: block;
+    }
+
+    #toc-content .is-active-link {
+        color: #42b983;
+    }
+
+    #floating-toc-btn {
+        position: fixed;
+        right: 15px;
+        bottom: 76px;
+        padding-top: 15px;
+        margin-bottom: 0;
+        z-index: 998;
+    }
+
+    #floating-toc-btn .btn-floating {
+        width: 48px;
+        height: 48px;
+    }
+
+    #floating-toc-btn .btn-floating i {
+        line-height: 48px;
+        font-size: 1.4rem;
+    }
+</style>
+<div class="row">
+    <div id="main-content" class="col s12 m12 l9">
+        <!-- 文章内容详情 -->
+<div id="artDetail">
+    <div class="card">
+        <div class="card-content article-info">
+            <div class="row tag-cate">
+                <div class="col s7">
+                    
+                    <div class="article-tag">
+                        
+                            <a href="/tags/CSDN%E8%BD%AC%E8%BD%BD/">
+                                <span class="chip bg-color">CSDN转载</span>
+                            </a>
+                        
+                            <a href="/tags/Audio/">
+                                <span class="chip bg-color">Audio</span>
+                            </a>
+                        
+                    </div>
+                    
+                </div>
+                <div class="col s5 right-align">
+                    
+                </div>
+            </div>
+
+            <div class="post-info">
+                
+                <div class="post-date info-break-policy">
+                    <i class="far fa-calendar-minus fa-fw"></i>Publish Date:&nbsp;&nbsp;
+                    2021-07-17
+                </div>
+                
+
+                
+
+                
+
+                
+
+                
+            </div>
+        </div>
+        <hr class="clearfix">
+
+        
+
+        
+
+        <div class="card-content article-card-content">
+            <div id="articleContent">
+                <p>The goal of this series of articles is to give you a deep understanding of what audio focus is, why it’s important to deliver a good media UX, and how to use it. This is the final part of the series that includes:</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://medium.com/@nazmul/audio-focus-1-6b32689e4380">The importance of being a good media citizen and the most common Audio Focus use cases</a></li>
+<li><a target="_blank" rel="noopener" href="https://medium.com/@nazmul/audio-focus-2-42244043863a">Other use cases where Audio Focus is important to your media app’s UX</a></li>
+<li>Three steps to implementing Audio Focus in your app (<strong><em>this article</em></strong>)</li>
+</ol>
+<p>If you don’t handle audio focus properly, the following diagram depicts what your user might experience on their phone.</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/bee731da3a1670c2aa12470e29b62c3f.png"></p>
+<p>Now that you know the importance of your app being a good media citizen for the user to have a good media experience on their phone, let’s go thru steps that will allow your app to handle audio focus properly.</p>
+<p>Before jumping into the code, the following diagram summarizes the steps that we are going to take to implement audio focus in your app.</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/dba9c4e49acfef8752a4b4900da1febf.png"></p>
+<h1 id="Step-1-Make-the-focus-request"><a href="#Step-1-Make-the-focus-request" class="headerlink" title="Step 1 : Make the focus request"></a>Step 1 : Make the focus request</h1><p>The first step in getting audio focus is making the request of the Android system to acquire it. Keep in mind that just because you have made the request doesn’t mean that it will be granted. In order to make the request to acquire audio focus you have to declare your “intention” to the system. Here are some examples.</p>
+<ul>
+<li><p>Is your app a media player or podcast player that will hold the audio focus for an indefinite period of time (as long as the user choose to play audio from your app)? This is <code>&lt;a href=&quot;https://developer.android.com/reference/android/media/AudioManager.html#AUDIOFOCUS_GAIN&quot;&gt;AUDIOFOCUS_GAIN&lt;/a&gt;</code>.</p>
+</li>
+<li><p>Or does your app temporarily need audio focus (with the option to duck), since it needs to play an audio notification, or a turn by turn spoken direction, or it needs to record audio from the user for a short period of time? This is <code>&lt;a href=&quot;https://developer.android.com/reference/android/media/AudioManager.html#AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK&quot;&gt;AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK&lt;/a&gt;</code>.</p>
+</li>
+<li><p>Does your app temporarily need audio focus (but for an unknown duration, without the option to duck) like a phone app would once a call is connected? This is <code>&lt;a href=&quot;https://developer.android.com/reference/android/media/AudioManager.html#AUDIOFOCUS_GAIN_TRANSIENT&quot;&gt;AUDIOFOCUS_GAIN_TRANSIENT&lt;/a&gt;</code>.</p>
+</li>
+<li><p>Does your app temporarily need audio focus (for an unknown duration, during which no other sounds should be generated) since it needs to record audio like a voice memo app? This is <code>&lt;a href=&quot;https://developer.android.com/reference/android/media/AudioManager.html#AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE&quot;&gt;AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE&lt;/a&gt;</code>.</p>
+</li>
+</ul>
+<p>On Android O and later you have to create an <code>&lt;a href=&quot;https://developer.android.com/reference/android/media/AudioFocusRequest.html&quot;&gt;AudioFocusRequest&lt;/a&gt;</code> object (using a <code>&lt;a href=&quot;https://developer.android.com/reference/android/media/AudioFocusRequest.Builder.html&quot;&gt;builder&lt;/a&gt;</code>). And in this object you will have to specify how long your app needs to acquire audio focus. The following code snippet declares the intention to permanently acquire audio focus from the system.</p>
+<pre><code>AudioManager mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);AudioAttributes mAudioAttributes =
+       new AudioAttributes.Builder()
+               .setUsage(AudioAttributes.USAGE_MEDIA)
+               .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+               .build();AudioFocusRequest mAudioFocusRequest =
+       new AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+               .setAudioAttributes(mAudioAttributes)
+               .setAcceptsDelayedFocusGain(true)
+               .setOnAudioFocusChangeListener(...) // Need to implement listener
+               .build();int focusRequest = mAudioManager.requestAudioFocus(mAudioFocusRequest);switch (focusRequest) &#123;
+   case AudioManager.AUDIOFOCUS_REQUEST_FAILED:
+       // don&#39;t start playback
+   case AudioManager.AUDIOFOCUS_REQUEST_GRANTED:
+       // actually start playback
+&#125;
+</code></pre>
+<p>Notes on the code:</p>
+<ol>
+<li><p>The <code>&lt;a href=&quot;https://developer.android.com/reference/android/media/AudioManager.html#AUDIOFOCUS_GAIN&quot;&gt;AudioManager.AUDIOFOCUS_GAIN&lt;/a&gt;</code> is what requests permanent audio focus from the system. You can also pass it it other int values, such as <code>&lt;a href=&quot;https://developer.android.com/reference/android/media/AudioManager.html#AUDIOFOCUS_GAIN_TRANSIENT&quot;&gt;AUDIOFOCUS_GAIN_TRANSIENT&lt;/a&gt;</code>, or <code>&lt;a href=&quot;https://developer.android.com/reference/android/media/AudioManager.html#AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK&quot;&gt;AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK&lt;/a&gt;</code> if you just wanted temporary audio focus.</p>
+</li>
+<li><p>You have to pass a <code>&lt;a href=&quot;https://developer.android.com/reference/android/media/AudioManager.OnAudioFocusChangeListener.html&quot;&gt;AudioManager.OnAudioFocusChangeListener&lt;/a&gt;</code> implementation to the <code>&lt;a href=&quot;https://developer.android.com/reference/android/media/AudioFocusRequest.Builder.html#setOnAudioFocusChangeListener%28android.media.AudioManager.OnAudioFocusChangeListener%29&quot;&gt;setOnAudioFocusChangeListener()&lt;/a&gt;</code> method. This is the part of your code that will deal with audio focus changes which are driven by events happening in the system. These might be started from user interactions in other apps. For example, your app might have gained permanent audio focus, but then the user launches another app which takes it away. This listener is where your app would have to deal with this focus loss.</p>
+</li>
+<li><p>Once you have created the <code>&lt;a href=&quot;https://developer.android.com/reference/android/media/AudioFocusRequest.html&quot;&gt;AudioFocusRequest&lt;/a&gt;</code> object, you can now use it in order to ask the <code>AudioManager</code> for audio focus by calling <code>&lt;a href=&quot;https://developer.android.com/reference/android/media/AudioManager.html#requestAudioFocus%28android.media.AudioFocusRequest%29&quot;&gt;requestAudioFocus(&amp;#x2026;)&lt;/a&gt;</code>. This will return an integer value representing whether your audio focus request was granted or not. Only if that value is <code>&lt;a href=&quot;https://developer.android.com/reference/android/media/AudioManager.html#AUDIOFOCUS_REQUEST_GRANTED&quot;&gt;AUDIOFOCUS_REQUEST_GRANTED&lt;/a&gt;</code> should you start playback immediately. And if it’s <code>&lt;a href=&quot;https://developer.android.com/reference/android/media/AudioManager.html#AUDIOFOCUS_REQUEST_FAILED&quot;&gt;AUDIOFOCUS_REQUEST_FAILED&lt;/a&gt;</code>, then the system has denied your app acquisition of audio focus in that moment.</p>
+</li>
+</ol>
+<p>On Android N and earlier you can declare this intention without using the <code>AudioFocusRequest</code> object as shown below. You still have to implement <code>AudioManager.OnAudioFocusChangeListener</code>. Here’s the equivalent code to the snippet above.</p>
+<pre><code>AudioManager mAudioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);int focusRequest = mAudioManager.requestAudioFocus(..., // Need to implement listener
+       AudioManager.STREAM_MUSIC,
+       AudioManager.AUDIOFOCUS_GAIN);switch (focusRequest) &#123;
+   case AudioManager.AUDIOFOCUS_REQUEST_FAILED:
+       // don&#39;t start playback
+   case AudioManager.AUDIOFOCUS_REQUEST_GRANTED:
+       // actually start playback
+&#125;
+</code></pre>
+<p>Next, we have to implement the <code>AudioManager.OnAudioFocusChangeListener</code> so that the app can react to changes in audio focus gain and loss.</p>
+<h1 id="Step-2-Respond-to-audio-focus-state-changes"><a href="#Step-2-Respond-to-audio-focus-state-changes" class="headerlink" title="Step 2 : Respond to audio focus state changes"></a>Step 2 : Respond to audio focus state changes</h1><p>Once audio focus has been granted to your app (whether this is temporary or permanent) it can change at any time. And your app must react to this change. This is what happens in your <code>OnAudioFocusChangeListener</code> implementation.</p>
+<p>The following code snippet contains an implementation of this interface for an app that plays audio. And it handles ducking for transient audio focus loss. It also handles audio focus change due to the user pausing playback, vs another app (<a target="_blank" rel="noopener" href="https://developer.android.com/guide/topics/media-apps/interacting-with-assistant.html">like the Google Assistant</a>) causing transient audio focus loss.</p>
+<pre><code>private final class AudioFocusHelper
+        implements AudioManager.OnAudioFocusChangeListener &#123;private void abandonAudioFocus() &#123;
+        mAudioManager.abandonAudioFocus(this);
+    &#125;@Override
+    public void onAudioFocusChange(int focusChange) &#123;
+        switch (focusChange) &#123;
+            case AudioManager.AUDIOFOCUS_GAIN:
+                if (mPlayOnAudioFocus &amp;&amp; !isPlaying()) &#123;
+                    play();
+                &#125; else if (isPlaying()) &#123;
+                    setVolume(MEDIA_VOLUME_DEFAULT);
+                &#125;
+                mPlayOnAudioFocus = false;
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+                setVolume(MEDIA_VOLUME_DUCK);
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+                if (isPlaying()) &#123;
+                    mPlayOnAudioFocus = true;
+                    pause();
+                &#125;
+                break;
+            case AudioManager.AUDIOFOCUS_LOSS:
+                mAudioManager.abandonAudioFocus(this);
+                mPlayOnAudioFocus = false;
+                stop();
+                break;
+        &#125;
+    &#125;
+&#125;
+</code></pre>
+<p>The app should behave differently when the user initiates the pause of playback, from when another app requests transient audio focus and playback is paused as a result (instead of just ducking). When the user initiates pausing playback, your app should abandon audio focus. However, if your app pauses playback in response to a transient loss of audio focus, then it should not abandon audio focus. Here are some use cases to illustrate this.</p>
+<p>Let’s say you have an audio playback app that plays audio in the background.</p>
+<ol>
+<li><p>When the user presses play, your app requests permanent audio focus. Let’s say that it’s granted audio focus by the system.</p>
+</li>
+<li><p>Now they long press the home button and it starts the Google Assistant. The Assistant will request to gain transient audio focus.</p>
+</li>
+<li><p>Once the system grants this to the Assistant, your <code>OnAudioFocusChangeListener</code> will get a <code>AUDIOFOCUS_LOSS_TRANSIENT</code> event. And here, you would pause playback, since the Assistant needs to record audio.</p>
+</li>
+<li><p>Once the Assistant is done, it will abandon its audio focus, and your app will be granted <code>AUDIOFOCUS_GAIN</code> in the <code>OnAudioFocusChangeListener</code>. This is where you have to decide whether to resume playback or not. And this is what the <code>mPlayOnAudioFocus</code> flag does in the code snippet above.</p>
+</li>
+</ol>
+<p>The following code snippet is what the user initiated pause method might look like in this audio player app.</p>
+<pre><code>public final void pause() &#123;
+   if (!mPlayOnAudioFocus) &#123;
+       mAudioFocusHelper.abandonAudioFocus();
+   &#125;
+  onPause();
+&#125;
+</code></pre>
+<p>As you can see it abandons audio focus when the user initiates pausing playback, but not when other apps cause it to happen (when they acquire <code>AUDIOFOCUS_GAIN_TRANSIENT</code>).</p>
+<h2 id="Ducking-vs-pausing-on-transient-audio-focus-loss"><a href="#Ducking-vs-pausing-on-transient-audio-focus-loss" class="headerlink" title="Ducking vs pausing on transient audio focus loss"></a>Ducking vs pausing on transient audio focus loss</h2><p>You can choose to pause playback or temporarily reduce the volume of your audio playback in the <code>OnAudioFocusChangeListener</code>, depending on what UX your app needs to deliver. Android O supports auto ducking, where the system will reduce the volume of your app automatically without you having to write any extra code. In your <code>OnAudioFocusChangeListener</code>, just ignore the <code>AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK</code> event.</p>
+<p>In Android N and earlier, you have to implement ducking yourself (as shown in the code snippet above).</p>
+<h2 id="Delayed-gain"><a href="#Delayed-gain" class="headerlink" title="Delayed gain"></a>Delayed gain</h2><p>Android O introduced the concept of delayed audio focus gain. In order to implement this, when you request audio focus, you can get a <code>AUDIOFOCUS_REQUEST_DELAYED</code> result, as shown below.</p>
+<pre><code>public void requestPlayback() &#123;
+    int audioFocus = mAudioManager.requestAudioFocus(mAudioFocusRequest);
+    switch (audioFocus) &#123;
+        case AudioManager.AUDIOFOCUS_REQUEST_FAILED:
+            ...
+
+        case AudioManager.AUDIOFOCUS_REQUEST_GRANTED:
+            ...
+
+        case AudioManager.AUDIOFOCUS_REQUEST_DELAYED:
+            mAudioFocusPlaybackDelayed = true;
+    &#125;
+&#125;
+</code></pre>
+<p>In your <code>OnAudioFocusChangeListener</code> implementation, you will then have to check for the <code>mAudioFocusPlaybackDelayed</code> variable when you respond to <code>AUDIOFOCUS_GAIN</code>, as shown below.</p>
+<pre><code>private void onAudioFocusChange(int focusChange) &#123;
+   switch (focusChange) &#123;
+       case AudioManager.AUDIOFOCUS_GAIN:
+           logToUI(&quot;Audio Focus: Gained&quot;);
+           if (mAudioFocusPlaybackDelayed || mAudioFocusResumeOnFocusGained) &#123;
+               mAudioFocusPlaybackDelayed = false;
+               mAudioFocusResumeOnFocusGained = false;
+               start();
+           &#125;
+           break;
+       case AudioManager.AUDIOFOCUS_LOSS:
+           mAudioFocusResumeOnFocusGained = false;
+           mAudioFocusPlaybackDelayed = false;
+           stop();
+           break;
+       case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT:
+           mAudioFocusResumeOnFocusGained = true;
+           mAudioFocusPlaybackDelayed = false;
+           pause();
+           break;
+       case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
+           pause();
+           break;
+   &#125;
+&#125;
+</code></pre>
+<h1 id="Step-3-Remember-to-abandon-audio-focus"><a href="#Step-3-Remember-to-abandon-audio-focus" class="headerlink" title="Step 3 : Remember to abandon audio focus"></a>Step 3 : Remember to abandon audio focus</h1><p>When your app has completed playing it’s audio, then it should abandon audio focus by calling <code>&lt;a href=&quot;https://developer.android.com/reference/android/media/AudioManager.html#abandonAudioFocus%28android.media.AudioManager.OnAudioFocusChangeListener%29&quot;&gt;AudioManager.abandonAudioFocus(&amp;#x2026;)&lt;/a&gt;</code>. In the previous step we ran into the situation of an app abandoning audio focus when the user initiates pausing playback, but the app retaining audio focus when it’s interrupted temporarily by other apps.</p>
+<h1 id="Code-samples"><a href="#Code-samples" class="headerlink" title="Code samples"></a>Code samples</h1><h2 id="Gist-that-you-can-use-in-your-app"><a href="#Gist-that-you-can-use-in-your-app" class="headerlink" title="Gist that you can use in your app"></a>Gist that you can use in your app</h2><p>You can find 3 classes in this <a target="_blank" rel="noopener" href="https://gist.github.com/nic0lette/c360dd353c451d727ea017890cbaa521">GitHub gist</a> that covers audio focus code that you might be able to use in your apps.</p>
+<ul>
+<li><p><code>&lt;a href=&quot;https://gist.github.com/nic0lette/c360dd353c451d727ea017890cbaa521#file-audiofocusrequestcompat-java&quot;&gt;AudioFocusRequestCompat&lt;/a&gt;</code> — Use this class to describe the type of audio focus that your app needs.</p>
+</li>
+<li><p><code>&lt;a href=&quot;https://gist.github.com/nic0lette/c360dd353c451d727ea017890cbaa521#file-audiofocushelper-java&quot;&gt;AudioFocusHelper&lt;/a&gt;</code> — This class actually handles audio focus for you. You can include it in your app, but you have to make sure that your audio playback service uses the interface below.</p>
+</li>
+<li><p><code>&lt;a href=&quot;https://gist.github.com/nic0lette/c360dd353c451d727ea017890cbaa521#file-audiofocusawareplayer-java&quot;&gt;AudioFocusAwarePlayer&lt;/a&gt;</code> — This interface should be implemented by the service that manages your media player (<code>MediaPlayer</code> or <code>ExoPlayer</code>) and it will allow the <code>AudioFocusHelper</code> class to make it work with audio focus.</p>
+</li>
+</ul>
+<h2 id="Complete-code-sample"><a href="#Complete-code-sample" class="headerlink" title="Complete code sample"></a>Complete code sample</h2><p>The <code>&lt;a href=&quot;https://github.com/googlesamples/android-MediaBrowserService&quot;&gt;android-MediaBrowserService&lt;/a&gt;</code> sample showcases how you can handle audio focus in an Android app that uses the <code>MediaPlayer</code> to actually play audio in the background. It also uses <code>MediaSession</code>.</p>
+<p>The sample has a <code>&lt;a href=&quot;https://github.com/googlesamples/android-MediaBrowserService/blob/master/app/src/main/java/com/example/android/mediasession/service/PlayerAdapter.java&quot;&gt;PlayerAdapter&lt;/a&gt;</code> class that showcases audio focus best practices. Please take a look at at the <code>pause()</code> and <code>onAudioFocusChange(int)</code> method implementations.</p>
+<h1 id="Test-your-code"><a href="#Test-your-code" class="headerlink" title="Test your code"></a>Test your code</h1><p>Once you’ve implemented audio focus in your app, you can use the Android Media Controller Tool to test how your app reacts to focus gain and loss. You can get it on <a target="_blank" rel="noopener" href="https://github.com/googlesamples/android-media-controller#audio-focus">GitHub</a>.</p>
+<p><img src="https://img-blog.csdnimg.cn/img_convert/4a726a91aab5cdd7d941c139799342cc.png"></p>
+<h1 id="Android-Media-Resources"><a href="#Android-Media-Resources" class="headerlink" title="Android Media Resources"></a>Android Media Resources</h1><ul>
+<li><a target="_blank" rel="noopener" href="https://github.com/googlesamples/android-MediaBrowserService">Sample code — MediaBrowserService</a></li>
+<li><a target="_blank" rel="noopener" href="https://github.com/googlesamples/android-media-controller">Sample code — MediaSession Controller Test (with support for audio focus testing)</a></li>
+<li><a target="_blank" rel="noopener" href="https://medium.com/google-developers/understanding-mediasession-part-1-3-e4d2725f18e4">Understanding MediaSession</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.android.com/guide/topics/media-apps/media-apps-overview.html">Media API Guides — Media Apps Overview</a></li>
+<li><a target="_blank" rel="noopener" href="https://developer.android.com/guide/topics/media-apps/working-with-a-media-session.html">Media API Guides — Working with a MediaSession</a></li>
+<li><a target="_blank" rel="noopener" href="https://medium.com/google-developers/building-a-simple-audio-app-in-android-part-1-3-c14d1a66e0f1">Building a simple audio playback app using MediaPlayer</a></li>
+</ul>
+
+                
+            </div>
+            <hr/>
+
+            
+
+    <div class="reprint" id="reprint-statement">
+        
+            <div class="reprint__author">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-user">
+                        Author:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="/about" rel="external nofollow noreferrer">Sunnie_ge Csdn认证博客专家 Csdn认证企业博客 码龄8年 暂无认证</a>
+                </span>
+            </div>
+            <div class="reprint__type">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-link">
+                        Link:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    <a href="http://gxx9203.github.io/2021/07/17/csdn_audio/UnderstandingAudioFocus3/">http://gxx9203.github.io/2021/07/17/csdn_audio/UnderstandingAudioFocus3/</a>
+                </span>
+            </div>
+            <div class="reprint__notice">
+                <span class="reprint-meta" style="font-weight: bold;">
+                    <i class="fas fa-copyright">
+                        Reprint policy:
+                    </i>
+                </span>
+                <span class="reprint-info">
+                    All articles in this blog are used except for special statements
+                    <a href="https://creativecommons.org/licenses/by/4.0/deed.zh" rel="external nofollow noreferrer" target="_blank">CC BY 4.0</a>
+                    reprint polocy. If reproduced, please indicate source
+                    <a href="/about" target="_blank">Sunnie_ge Csdn认证博客专家 Csdn认证企业博客 码龄8年 暂无认证</a>
+                    !
+                </span>
+            </div>
+        
+    </div>
+
+    <script async defer>
+      document.addEventListener("copy", function (e) {
+        let toastHTML = '<span>Copied successfully, please follow the reprint policy of this article</span><button class="btn-flat toast-action" onclick="navToReprintStatement()" style="font-size: smaller">more</a>';
+        M.toast({html: toastHTML})
+      });
+
+      function navToReprintStatement() {
+        $("html, body").animate({scrollTop: $("#reprint-statement").offset().top - 80}, 800);
+      }
+    </script>
+
+
+
+            <div class="tag_share" style="display: block;">
+                <div class="post-meta__tag-list" style="display: inline-block;">
+                    
+                        <div class="article-tag">
+                            
+                                <a href="/tags/CSDN%E8%BD%AC%E8%BD%BD/">
+                                    <span class="chip bg-color">CSDN转载</span>
+                                </a>
+                            
+                                <a href="/tags/Audio/">
+                                    <span class="chip bg-color">Audio</span>
+                                </a>
+                            
+                        </div>
+                    
+                </div>
+                <div class="post_share" style="zoom: 80%; width: fit-content; display: inline-block; float: right; margin: -0.15rem 0;">
+                    <link rel="stylesheet" type="text/css" href="/libs/share/css/share.min.css">
+<div id="article-share">
+
+    
+    <div class="social-share" data-sites="twitter,facebook,google,qq,qzone,wechat,weibo,douban,linkedin" data-wechat-qrcode-helper="<p>微信扫一扫即可分享！</p>"></div>
+    <script src="/libs/share/js/social-share.min.js"></script>
+    
+
+    
+
+</div>
+
+                </div>
+            </div>
+            
+                <style>
+    #reward {
+        margin: 40px 0;
+        text-align: center;
+    }
+
+    #reward .reward-link {
+        font-size: 1.4rem;
+        line-height: 38px;
+    }
+
+    #reward .btn-floating:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2), 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #rewardModal {
+        width: 320px;
+        height: 350px;
+    }
+
+    #rewardModal .reward-title {
+        margin: 15px auto;
+        padding-bottom: 5px;
+    }
+
+    #rewardModal .modal-content {
+        padding: 10px;
+    }
+
+    #rewardModal .close {
+        position: absolute;
+        right: 15px;
+        top: 15px;
+        color: rgba(0, 0, 0, 0.5);
+        font-size: 1.3rem;
+        line-height: 20px;
+        cursor: pointer;
+    }
+
+    #rewardModal .close:hover {
+        color: #ef5350;
+        transform: scale(1.3);
+        -moz-transform:scale(1.3);
+        -webkit-transform:scale(1.3);
+        -o-transform:scale(1.3);
+    }
+
+    #rewardModal .reward-tabs {
+        margin: 0 auto;
+        width: 210px;
+    }
+
+    .reward-tabs .tabs {
+        height: 38px;
+        margin: 10px auto;
+        padding-left: 0;
+    }
+
+    .reward-content ul {
+        padding-left: 0 !important;
+    }
+
+    .reward-tabs .tabs .tab {
+        height: 38px;
+        line-height: 38px;
+    }
+
+    .reward-tabs .tab a {
+        color: #fff;
+        background-color: #ccc;
+    }
+
+    .reward-tabs .tab a:hover {
+        background-color: #ccc;
+        color: #fff;
+    }
+
+    .reward-tabs .wechat-tab .active {
+        color: #fff !important;
+        background-color: #22AB38 !important;
+    }
+
+    .reward-tabs .alipay-tab .active {
+        color: #fff !important;
+        background-color: #019FE8 !important;
+    }
+
+    .reward-tabs .reward-img {
+        width: 210px;
+        height: 210px;
+    }
+</style>
+
+<div id="reward">
+    <a href="#rewardModal" class="reward-link modal-trigger btn-floating btn-medium waves-effect waves-light red">赏</a>
+
+    <!-- Modal Structure -->
+    <div id="rewardModal" class="modal">
+        <div class="modal-content">
+            <a class="close modal-close"><i class="fas fa-times"></i></a>
+            <h4 class="reward-title">你的赏识是我前进的动力</h4>
+            <div class="reward-content">
+                <div class="reward-tabs">
+                    <ul class="tabs row">
+                        <li class="tab col s6 alipay-tab waves-effect waves-light"><a href="#alipay">支付宝</a></li>
+                        <li class="tab col s6 wechat-tab waves-effect waves-light"><a href="#wechat">微 信</a></li>
+                    </ul>
+                    <div id="alipay">
+                        <img src="/medias/reward/alipay.jpg" class="reward-img" alt="支付宝打赏二维码">
+                    </div>
+                    <div id="wechat">
+                        <img src="/medias/reward/wechat.png" class="reward-img" alt="微信打赏二维码">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.tabs').tabs();
+    });
+</script>
+
+            
+        </div>
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+<article id="prenext-posts" class="prev-next articles">
+    <div class="row article-row">
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge left-badge text-color">
+                <i class="fas fa-chevron-left"></i>&nbsp;Previous</div>
+            <div class="card">
+                <a href="/2021/08/15/hexo%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="hexo搭建教程">
+                        
+                        <span class="card-title">hexo搭建教程</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="far fa-clock fa-fw icon-date"></i>2021-08-15
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            gxx9203
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/hexo%E6%90%AD%E5%BB%BA%E6%95%99%E7%A8%8B/">
+                        <span class="chip bg-color">hexo搭建教程</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                Next&nbsp;<i class="fas fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2021/07/17/csdn_audio/UnderstandingAudioFocus2/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="Understanding Audio Focus (Part 2 / 3)">
+                        
+                        <span class="card-title">Understanding Audio Focus (Part 2 / 3)</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="far fa-clock fa-fw icon-date"></i>2021-07-17
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fas fa-user fa-fw"></i>
+                            Sunnie_ge Csdn认证博客专家 Csdn认证企业博客 码龄8年 暂无认证
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/CSDN%E8%BD%AC%E8%BD%BD/">
+                        <span class="chip bg-color">CSDN转载</span>
+                    </a>
+                    
+                    <a href="/tags/Audio/">
+                        <span class="chip bg-color">Audio</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+    </div>
+</article>
+
+</div>
+
+
+
+<!-- 代码块功能依赖 -->
+<script type="text/javascript" src="/libs/codeBlock/codeBlockFuction.js"></script>
+
+<!-- 代码语言 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeLang.js"></script>
+
+
+<!-- 代码块复制 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeCopy.js"></script>
+
+
+<!-- 代码块收缩 -->
+
+<script type="text/javascript" src="/libs/codeBlock/codeShrink.js"></script>
+
+
+    </div>
+    <div id="toc-aside" class="expanded col l3 hide-on-med-and-down">
+        <div class="toc-widget card" style="background-color: white;">
+            <div class="toc-title"><i class="far fa-list-alt"></i>&nbsp;&nbsp;TOC</div>
+            <div id="toc-content"></div>
+        </div>
+    </div>
+</div>
+
+<!-- TOC 悬浮按钮. -->
+
+<div id="floating-toc-btn" class="hide-on-med-and-down">
+    <a class="btn-floating btn-large bg-color">
+        <i class="fas fa-list-ul"></i>
+    </a>
+</div>
+
+
+<script src="/libs/tocbot/tocbot.min.js"></script>
+<script>
+    $(function () {
+        tocbot.init({
+            tocSelector: '#toc-content',
+            contentSelector: '#articleContent',
+            headingsOffset: -($(window).height() * 0.4 - 45),
+            collapseDepth: Number('0'),
+            headingSelector: 'h2, h3, h4'
+        });
+
+        // modify the toc link href to support Chinese.
+        let i = 0;
+        let tocHeading = 'toc-heading-';
+        $('#toc-content a').each(function () {
+            $(this).attr('href', '#' + tocHeading + (++i));
+        });
+
+        // modify the heading title id to support Chinese.
+        i = 0;
+        $('#articleContent').children('h2, h3, h4').each(function () {
+            $(this).attr('id', tocHeading + (++i));
+        });
+
+        // Set scroll toc fixed.
+        let tocHeight = parseInt($(window).height() * 0.4 - 64);
+        let $tocWidget = $('.toc-widget');
+        $(window).scroll(function () {
+            let scroll = $(window).scrollTop();
+            /* add post toc fixed. */
+            if (scroll > tocHeight) {
+                $tocWidget.addClass('toc-fixed');
+            } else {
+                $tocWidget.removeClass('toc-fixed');
+            }
+        });
+
+        
+        /* 修复文章卡片 div 的宽度. */
+        let fixPostCardWidth = function (srcId, targetId) {
+            let srcDiv = $('#' + srcId);
+            if (srcDiv.length === 0) {
+                return;
+            }
+
+            let w = srcDiv.width();
+            if (w >= 450) {
+                w = w + 21;
+            } else if (w >= 350 && w < 450) {
+                w = w + 18;
+            } else if (w >= 300 && w < 350) {
+                w = w + 16;
+            } else {
+                w = w + 14;
+            }
+            $('#' + targetId).width(w);
+        };
+
+        // 切换TOC目录展开收缩的相关操作.
+        const expandedClass = 'expanded';
+        let $tocAside = $('#toc-aside');
+        let $mainContent = $('#main-content');
+        $('#floating-toc-btn .btn-floating').click(function () {
+            if ($tocAside.hasClass(expandedClass)) {
+                $tocAside.removeClass(expandedClass).hide();
+                $mainContent.removeClass('l9');
+            } else {
+                $tocAside.addClass(expandedClass).show();
+                $mainContent.addClass('l9');
+            }
+            fixPostCardWidth('artDetail', 'prenext-posts');
+        });
+        
+    });
+</script>
+
+    
+
+</main>
+
+
+
+
+    <footer class="page-footer bg-color">
+    
+        <link rel="stylesheet" href="/libs/aplayer/APlayer.min.css">
+<style>
+    .aplayer .aplayer-lrc p {
+        
+        display: none;
+        
+        font-size: 12px;
+        font-weight: 700;
+        line-height: 16px !important;
+    }
+
+    .aplayer .aplayer-lrc p.aplayer-lrc-current {
+        
+        display: none;
+        
+        font-size: 15px;
+        color: #42b983;
+    }
+
+    
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body {
+        left: -66px !important;
+    }
+
+    .aplayer.aplayer-fixed.aplayer-narrow .aplayer-body:hover {
+        left: 0px !important;
+    }
+
+    
+</style>
+<div class="">
+    
+    <div class="row">
+        <meting-js class="col l8 offset-l2 m10 offset-m1 s12"
+                   server="netease"
+                   type="playlist"
+                   id="503838841"
+                   fixed='true'
+                   autoplay='false'
+                   theme='#42b983'
+                   loop='all'
+                   order='random'
+                   preload='auto'
+                   volume='0.7'
+                   list-folded='true'
+        >
+        </meting-js>
+    </div>
+</div>
+
+<script src="/libs/aplayer/APlayer.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js"></script>
+
+    
+    <div class="container row center-align" style="margin-bottom: 0px !important;">
+        <div class="col s12 m8 l8 copy-right">
+            Copyright&nbsp;&copy;
+            
+                <span id="year">2019-2021</span>
+            
+            <span id="year">2019</span>
+            <a href="/about" target="_blank">gxx9203</a>
+            |&nbsp;Powered by&nbsp;<a href="https://hexo.io/" target="_blank">Hexo</a>
+            |&nbsp;Theme&nbsp;<a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">Matery</a>
+            <br>
+            
+            
+            
+            
+            
+            
+            <span id="busuanzi_container_site_pv">
+                |&nbsp;<i class="far fa-eye"></i>&nbsp;总访问量:&nbsp;<span id="busuanzi_value_site_pv"
+                    class="white-color"></span>&nbsp;次
+            </span>
+            
+            
+            <span id="busuanzi_container_site_uv">
+                |&nbsp;<i class="fas fa-users"></i>&nbsp;总访问人数:&nbsp;<span id="busuanzi_value_site_uv"
+                    class="white-color"></span>&nbsp;人
+            </span>
+            
+            <br>
+            
+            <br>
+            
+        </div>
+        <div class="col s12 m4 l4 social-link social-statis">
+    <a href="https://github.com/gxx9203" class="tooltipped" target="_blank" data-tooltip="访问我的GitHub" data-position="top" data-delay="50">
+        <i class="fab fa-github"></i>
+    </a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>
+    </div>
+</footer>
+
+<div class="progress-bar"></div>
+
+
+    <!-- 搜索遮罩框 -->
+<div id="searchModal" class="modal">
+    <div class="modal-content">
+        <div class="search-header">
+            <span class="title"><i class="fas fa-search"></i>&nbsp;&nbsp;Search</span>
+            <input type="search" id="searchInput" name="s" placeholder="Please enter a search keyword"
+                   class="search-input">
+        </div>
+        <div id="searchResult"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+$(function () {
+    var searchFunc = function (path, search_id, content_id) {
+        'use strict';
+        $.ajax({
+            url: path,
+            dataType: "xml",
+            success: function (xmlResponse) {
+                // get the contents from search data
+                var datas = $("entry", xmlResponse).map(function () {
+                    return {
+                        title: $("title", this).text(),
+                        content: $("content", this).text(),
+                        url: $("url", this).text()
+                    };
+                }).get();
+                var $input = document.getElementById(search_id);
+                var $resultContent = document.getElementById(content_id);
+                $input.addEventListener('input', function () {
+                    var str = '<ul class=\"search-result-list\">';
+                    var keywords = this.value.trim().toLowerCase().split(/[\s\-]+/);
+                    $resultContent.innerHTML = "";
+                    if (this.value.trim().length <= 0) {
+                        return;
+                    }
+                    // perform local searching
+                    datas.forEach(function (data) {
+                        var isMatch = true;
+                        var data_title = data.title.trim().toLowerCase();
+                        var data_content = data.content.trim().replace(/<[^>]+>/g, "").toLowerCase();
+                        var data_url = data.url;
+                        data_url = data_url.indexOf('/') === 0 ? data.url : '/' + data_url;
+                        var index_title = -1;
+                        var index_content = -1;
+                        var first_occur = -1;
+                        // only match artiles with not empty titles and contents
+                        if (data_title !== '' && data_content !== '') {
+                            keywords.forEach(function (keyword, i) {
+                                index_title = data_title.indexOf(keyword);
+                                index_content = data_content.indexOf(keyword);
+                                if (index_title < 0 && index_content < 0) {
+                                    isMatch = false;
+                                } else {
+                                    if (index_content < 0) {
+                                        index_content = 0;
+                                    }
+                                    if (i === 0) {
+                                        first_occur = index_content;
+                                    }
+                                }
+                            });
+                        }
+                        // show search results
+                        if (isMatch) {
+                            str += "<li><a href='" + data_url + "' class='search-result-title'>" + data_title + "</a>";
+                            var content = data.content.trim().replace(/<[^>]+>/g, "");
+                            if (first_occur >= 0) {
+                                // cut out 100 characters
+                                var start = first_occur - 20;
+                                var end = first_occur + 80;
+                                if (start < 0) {
+                                    start = 0;
+                                }
+                                if (start === 0) {
+                                    end = 100;
+                                }
+                                if (end > content.length) {
+                                    end = content.length;
+                                }
+                                var match_content = content.substr(start, end);
+                                // highlight all keywords
+                                keywords.forEach(function (keyword) {
+                                    var regS = new RegExp(keyword, "gi");
+                                    match_content = match_content.replace(regS, "<em class=\"search-keyword\">" + keyword + "</em>");
+                                });
+
+                                str += "<p class=\"search-result\">" + match_content + "...</p>"
+                            }
+                            str += "</li>";
+                        }
+                    });
+                    str += "</ul>";
+                    $resultContent.innerHTML = str;
+                });
+            }
+        });
+    };
+
+    searchFunc('/search.xml', 'searchInput', 'searchResult');
+});
+</script>
+
+    <!-- 回到顶部按钮 -->
+<div id="backTop" class="top-scroll">
+    <a class="btn-floating btn-large waves-effect waves-light" href="#!">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+</div>
+
+
+    <script src="/libs/materialize/materialize.min.js"></script>
+    <script src="/libs/masonry/masonry.pkgd.min.js"></script>
+    <script src="/libs/aos/aos.js"></script>
+    <script src="/libs/scrollprogress/scrollProgress.min.js"></script>
+    <script src="/libs/lightGallery/js/lightgallery-all.min.js"></script>
+    <script src="/js/matery.js"></script>
+
+    <!-- Baidu Analytics -->
+
+    <!-- Baidu Push -->
+
+<script>
+    (function () {
+        var bp = document.createElement('script');
+        var curProtocol = window.location.protocol.split(':')[0];
+        if (curProtocol === 'https') {
+            bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+        } else {
+            bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+        }
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(bp, s);
+    })();
+</script>
+
+    
+    <script src="/libs/others/clicklove.js" async="async"></script>
+    
+    
+    <script async src="/libs/others/busuanzi.pure.mini.js"></script>
+    
+
+    
+
+    
+
+	
+    
+
+    
+
+    
+
+    
+    <script src="/libs/instantpage/instantpage.js" type="module"></script>
+    
+
+</body>
+
+</html>
